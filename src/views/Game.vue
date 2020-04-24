@@ -1,14 +1,23 @@
 <template>
   <div class="home">
     <keep-alive>
-    <component v-bind:is="currentViewComponent" @updateName="updateName" @updateView="updateView" @updateSettings="updateSettings" :player="player"></component>
+      <component
+        v-bind:is="currentViewComponent"
+        @updateName="updateName"
+        @updateView="updateView"
+        @updateSettings="updateSettings"
+        :player="player"
+      ></component>
     </keep-alive>
-    <p>Name : {{player.name}}</p>
-    <p>Einstellungen : Modus: {{player.settings.mode}} Karten: {{player.settings.cards}}</p>
+    <p>Name : {{ player.name }}</p>
+    <p>
+      Einstellungen : Modus: {{ player.settings.mode }} Karten:
+      {{ player.settings.cards }}
+    </p>
   </div>
 </template>
 
-<script>  
+<script>
 // @ is an alias to /src
 import Intro from "@/components/Intro.vue";
 import Board from "@/components/Board.vue";
@@ -21,34 +30,34 @@ export default {
     Board,
     Mode
   },
-  data(){
-    return{
-      player:{
+  data() {
+    return {
+      player: {
         name: "",
-        settings:{
-          mode:"",
-          cards:0,
+        settings: {
+          mode: "",
+          cards: 0
         }
       },
-      currentView:"Intro",
-      views:["Board","Intro","Mode"]
-    }
+      currentView: "Intro",
+      views: ["Board", "Intro", "Mode"]
+    };
   },
   computed: {
-          currentViewComponent: function() {
-            return this.currentView;
-          }
+    currentViewComponent: function() {
+      return this.currentView;
+    }
   },
-  methods:{
-    updateName(name){
-      this.player.name=name;
+  methods: {
+    updateName(name) {
+      this.player.name = name;
     },
-    updateView(view){
-      this.currentView=view;
+    updateView(view) {
+      this.currentView = view;
     },
-    updateSettings(settings){
-      this.player.settings.mode=settings.mode;
-      this.player.settings.cards=settings.cards;
+    updateSettings(settings) {
+      this.player.settings.mode = settings.mode;
+      this.player.settings.cards = settings.cards;
     }
   }
 };

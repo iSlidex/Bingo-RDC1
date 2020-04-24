@@ -1,52 +1,67 @@
 <template>
-  <v-content>
-    <v-container class="fill-height" fluid>
-      <v-row align="center" justify="center">
-        <v-col cols="12" sm="8" md="4">
-          <v-card class="elevation-12">
-            <v-toolbar color="primary" dark flat>
-              <v-toolbar-title>Das Bingo</v-toolbar-title>
-              <v-spacer />
-            </v-toolbar>
-            <v-container>
-              <v-card-text>
-                <v-simple-table>
-                  <template v-slot:default>
-                    <thead>
-                      <tr>
-                        <th class="header">B</th>
-                        <th class="header">I</th>
-                        <th class="header">N</th>
-                        <th class="header">G</th>
-                        <th class="header">O</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="item in 5" :key="item.id">
-                        <td>{{ card.B[item - 1] }}</td>
-                        <td>{{ card.I[item - 1] }}</td>
-                        <td>{{ card.N[item - 1] }}</td>
-                        <td>{{ card.G[item - 1] }}</td>
-                        <td>{{ card.O[item - 1] }}</td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-                <v-form v-on:submit.prevent="enviar"> </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn @click="generateAnotherCard()" color="primary"
-                  >Reset</v-btn
-                >
-                <v-btn color="primary">Jugar</v-btn>
-              </v-card-actions>
-            </v-container>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-content>
+  <div>
+    <v-content>
+      <div>
+        <v-container
+          class="fill-height"
+          fluid
+          v-for="carton in parseInt(player.settings.cards)"
+          :key="carton.id"
+        >
+          <v-row align="center" justify="center">
+            <v-col cols="12" sm="8" md="4">
+              <v-card class="elevation-12">
+                <v-toolbar color="primary" dark flat>
+                  <v-toolbar-title>Das Bingo {{ carton }}</v-toolbar-title>
+                  <v-spacer />
+                </v-toolbar>
+                <v-container>
+                  <v-card-text>
+                    <v-simple-table>
+                      <template v-slot:default>
+                        <thead>
+                          <tr>
+                            <th class="header">B</th>
+                            <th class="header">I</th>
+                            <th class="header">N</th>
+                            <th class="header">G</th>
+                            <th class="header">O</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="item in 5" :key="item.id">
+                            <td>{{ card[carton - 1].B[item - 1] }}</td>
+                            <td>{{ card[carton - 1].I[item - 1] }}</td>
+                            <td>{{ card[carton - 1].N[item - 1] }}</td>
+                            <td>{{ card[carton - 1].G[item - 1] }}</td>
+                            <td>{{ card[carton - 1].O[item - 1] }}</td>
+                          </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                    <v-form v-on:submit.prevent="enviar"> </v-form>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer />
+                    <v-btn
+                      @click="generateAnotherCard(carton - 1)"
+                      color="primary"
+                      :disabled="resetDisabled[carton - 1]"
+                      >Reset</v-btn
+                    >
+                    <v-btn color="primary">Jugar</v-btn>
+                  </v-card-actions>
+                </v-container>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col> </v-col>
+          </v-row>
+        </v-container>
+      </div>
+    </v-content>
+  </div>
 </template>
 
 <script>
@@ -56,17 +71,33 @@ export default {
   data() {
     return {
       card: {
-        B: { 0: "1", 1: "2", 2: "3", 3: "4", 4: "5" },
-        I: { 0: "6", 1: "7", 2: "8", 3: "9", 4: "10" },
-        N: { 0: "11", 1: "12", 2: "LIBRE", 3: "14", 4: "15" },
-        G: { 0: "16", 1: "17", 2: "18", 3: "19", 4: "20" },
-        O: { 0: "21", 1: "22", 2: "23", 3: "24", 4: "25" }
+        0: {
+          B: { 0: "1", 1: "2", 2: "3", 3: "4", 4: "5" },
+          I: { 0: "6", 1: "7", 2: "8", 3: "9", 4: "10" },
+          N: { 0: "11", 1: "12", 2: "LIBRE", 3: "14", 4: "15" },
+          G: { 0: "16", 1: "17", 2: "18", 3: "19", 4: "20" },
+          O: { 0: "21", 1: "22", 2: "23", 3: "24", 4: "25" }
+        },
+        1: {
+          B: { 0: "1", 1: "2", 2: "333", 3: "4", 4: "5" },
+          I: { 0: "6", 1: "7", 2: "888", 3: "9", 4: "10" },
+          N: { 0: "11", 1: "12", 2: "LIBRE", 3: "14", 4: "15" },
+          G: { 0: "16", 1: "17", 2: "18", 3: "19", 4: "20" },
+          O: { 0: "21", 1: "22", 2: "23", 3: "24", 4: "25" }
+        }
+      },
+      resetDisabled: {
+        0: false,
+        1: false
       },
       boleta: [25]
     };
   },
   computed: {
     usedNumbers: function() {
+      return new Array(76);
+    },
+    usedNumbers1: function() {
       return new Array(76);
     },
     calledNumbers: function() {
@@ -80,53 +111,64 @@ export default {
     enviar() {
       this.$emit("updateName", this.nombre);
     },
-    generateNewCard() {
+    async sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    generateNewCard(carton) {
       // set all elements in usedNumbers array as false
-      this.resetUsedNumbers();
+      this.resetUsedNumbers(carton);
       // loops 24 times because there are 24 squares (not including free square)
       for (var i = 0; i < 25; i++) {
         if (i == 12)
           // skip free square
           continue;
         // generates a number for each square
-        this.generateSquare(i);
+        this.generateSquare(i, carton);
       }
     },
 
-    generateSquare(squareNum) {
+    generateSquare(squareNum, carton) {
       // generates random number for each square (depends on column)
       var newNumber = (squareNum % 5) * 15 + this.generateNewNum();
       // loop makes sure there are no duplicates
-      while (this.usedNumbers[newNumber] == true) {
-        newNumber = (squareNum % 5) * 15 + this.generateNewNum();
+      if (carton == 0) {
+        while (this.usedNumbers[newNumber] == true) {
+          newNumber = (squareNum % 5) * 15 + this.generateNewNum();
+        }
+        this.usedNumbers[newNumber] = true;
+      } else {
+        while (this.usedNumbers1[newNumber] == true) {
+          newNumber = (squareNum % 5) * 15 + this.generateNewNum();
+        }
+        this.usedNumbers1[newNumber] = true;
       }
       // sets the used number in the array as true so no duplicates
-      this.usedNumbers[newNumber] = true;
+
       // sets the current square to the new number
       switch (squareNum % 5) {
         case 0:
           {
-            this.card.B[~~(squareNum / 5)] = newNumber;
+            this.card[carton].B[~~(squareNum / 5)] = newNumber;
           }
           break;
         case 1:
           {
-            this.card.I[~~(squareNum / 5)] = newNumber;
+            this.card[carton].I[~~(squareNum / 5)] = newNumber;
           }
           break;
         case 2:
           {
-            this.card.N[~~(squareNum / 5)] = newNumber;
+            this.card[carton].N[~~(squareNum / 5)] = newNumber;
           }
           break;
         case 3:
           {
-            this.card.G[~~(squareNum / 5)] = newNumber;
+            this.card[carton].G[~~(squareNum / 5)] = newNumber;
           }
           break;
         case 4:
           {
-            this.card.O[~~(squareNum / 5)] = newNumber;
+            this.card[carton].O[~~(squareNum / 5)] = newNumber;
           }
           break;
         default:
@@ -139,18 +181,24 @@ export default {
       return Math.floor(Math.random() * 15 + 1); //15
     },
 
-    resetUsedNumbers() {
+    resetUsedNumbers(carton) {
       // sets all elements of the usedNumbers array to false (resets the array)
-      for (var i = 0; i < this.usedNumbers.length; i++) {
-        this.usedNumbers[i] = false;
-      }
+      if (carton == 0)
+        for (var i = 0; i < this.usedNumbers.length; i++) {
+          this.usedNumbers[i] = false;
+        }
+      else
+        for (var j = 0; j < this.usedNumbers.length; j++) {
+          this.usedNumbers1[j] = false;
+        }
     },
 
     // when clicked, generates a new random card
-    generateAnotherCard() {
-      this.resetUsedNumbers();
-      this.generateNewCard();
-      this.resetSquareColours();
+    async generateAnotherCard(carton) {
+      this.resetDisabled[carton] = true;
+      this.resetUsedNumbers(carton);
+      this.generateNewCard(carton);
+      this.resetDisabled[carton] = false;
     },
 
     // resets all squares except FREE to white
@@ -443,7 +491,9 @@ export default {
     }
   },
   created() {
-    this.generateNewCard();
+    for (var k = 0; k < parseInt(this.player.settings.cards); k++)
+      this.generateNewCard(k);
+    console.log(this.player.settings.cards);
   }
 };
 </script>
