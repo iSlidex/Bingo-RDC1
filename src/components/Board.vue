@@ -472,7 +472,7 @@ td {
 }
 
 .header {
-  background: #f44242;
+  background: rgb(25, 118, 210);
   font-size: 20px;
 }
 
