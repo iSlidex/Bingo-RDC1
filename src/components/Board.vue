@@ -2,14 +2,15 @@
   <div>
     <v-content>
       <div>
-        <v-container
-          class="fill-height"
-          fluid
-          v-for="carton in parseInt(player.settings.cards)"
-          :key="carton.id"
-        >
+        <v-container class="fill-height" fluid>
           <v-row align="center" justify="center">
-            <v-col cols="12" sm="8" md="4">
+            <v-col
+              cols="12"
+              sm="8"
+              md="4"
+              v-for="carton in parseInt(player.settings.cards)"
+              :key="carton.id"
+            >
               <v-card class="elevation-12">
                 <v-toolbar color="primary" dark flat>
                   <v-toolbar-title>Das Bingo {{ carton }}</v-toolbar-title>
@@ -30,11 +31,41 @@
                         </thead>
                         <tbody>
                           <tr v-for="item in 5" :key="item.id">
-                            <td>{{ card[carton - 1].B[item - 1] }}</td>
-                            <td>{{ card[carton - 1].I[item - 1] }}</td>
-                            <td>{{ card[carton - 1].N[item - 1] }}</td>
-                            <td>{{ card[carton - 1].G[item - 1] }}</td>
-                            <td>{{ card[carton - 1].O[item - 1] }}</td>
+                            <td
+                              style="background-color:white"
+                              :id="'B' + carton + item"
+                              @click="markSquare('B' + carton + item)"
+                            >
+                              {{ card[carton - 1].B[item - 1] }}
+                            </td>
+                            <td
+                              style="background-color:white"
+                              :id="'I' + carton + item"
+                              @click="markSquare('I' + carton + item)"
+                            >
+                              {{ card[carton - 1].I[item - 1] }}
+                            </td>
+                            <td
+                              style="background-color:white"
+                              :id="'N' + carton + item"
+                              @click="markSquare('N' + carton + item)"
+                            >
+                              {{ card[carton - 1].N[item - 1] }}
+                            </td>
+                            <td
+                              style="background-color:white"
+                              :id="'G' + carton + item"
+                              @click="markSquare('G' + carton + item)"
+                            >
+                              {{ card[carton - 1].G[item - 1] }}
+                            </td>
+                            <td
+                              style="background-color:white"
+                              :id="'O' + carton + item"
+                              @click="markSquare('O' + carton + item)"
+                            >
+                              {{ card[carton - 1].O[item - 1] }}
+                            </td>
                           </tr>
                         </tbody>
                       </template>
@@ -56,7 +87,37 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col> </v-col>
+            <v-col>
+              <v-btn @click="callNumber()" color="primary" block
+                >SACAR NÚMERO</v-btn
+              >
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3"> Ultimo Numero: {{ currentCall }} </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="8">
+              Numeros sacados[{{ calledNumbers.length }}]:
+              <span v-for="num in calledNumbersLetters" :key="num.id"
+                >{{ num }}
+                <span
+                  v-if="
+                    calledNumbersLetters.length > 1 &&
+                      calledNumbersLetters.findIndex(
+                        element => element == num
+                      ) +
+                        1 !=
+                        calledNumbersLetters.length
+                  "
+                >
+                  -
+                </span>
+              </span>
+              <div>
+                <span> </span>
+              </div>
+            </v-col>
           </v-row>
         </v-container>
       </div>
@@ -90,6 +151,7 @@ export default {
         0: false,
         1: false
       },
+      currentCall: "",
       boleta: [25]
     };
   },
@@ -101,6 +163,9 @@ export default {
       return new Array(76);
     },
     calledNumbers: function() {
+      return new Array();
+    },
+    calledNumbersLetters: function() {
       return new Array();
     },
     goal: function() {
@@ -175,6 +240,85 @@ export default {
           "";
       }
     },
+    colorSquare(squareNum, carton) {
+      console.log("squareNum " + squareNum);
+      console.log("carton " + carton);
+      for (var i = 0; i < carton; i++) {
+        let card = carton - 1;
+        console.log("squareNum " + squareNum);
+        if (squareNum >= 1 && squareNum <= 15) {
+          for (var k = 0; k < 5; k++) {
+            console.log(this.card[card].B[k]);
+            if (this.card[card].B[k] == squareNum) {
+              let searchStr1 = "B" + carton + (k + 1);
+              let currentSquare = document.getElementById(searchStr1);
+              console.log(
+                "CS : B " + searchStr1 + " call: " + "B" + carton + (k + 1)
+              );
+              currentSquare.style.color = "dimgray";
+              currentSquare.style.backgroundColor = "#99d8ea";
+              break;
+            }
+          }
+        } else if (squareNum >= 16 && squareNum <= 30) {
+          for (var l = 0; l < 5; l++) {
+            console.log(this.card[card].I[l]);
+            if (this.card[card].I[l] == squareNum) {
+              let searchStr1 = "I" + carton + (l + 1);
+              let currentSquare = document.getElementById(searchStr1);
+              console.log(
+                "CS : I " + searchStr1 + " call: " + "I" + carton + (l + 1)
+              );
+              currentSquare.style.color = "dimgray";
+              currentSquare.style.backgroundColor = "#99d8ea";
+              break;
+            }
+          }
+        } else if (squareNum >= 31 && squareNum <= 45) {
+          for (var n = 0; n < 5; n++) {
+            console.log(this.card[card].N[n]);
+            if (this.card[card].N[n] == squareNum) {
+              let searchStr1 = "N" + carton + (n + 1);
+              let currentSquare = document.getElementById(searchStr1);
+              console.log(
+                "CS : N " + searchStr1 + " call: " + "N" + carton + (n + 1)
+              );
+              currentSquare.style.color = "dimgray";
+              currentSquare.style.backgroundColor = "#99d8ea";
+              break;
+            }
+          }
+        } else if (squareNum >= 46 && squareNum <= 60) {
+          for (var g = 0; g < 5; g++) {
+            console.log(this.card[card].G[g]);
+            if (this.card[card].G[g] == squareNum) {
+              let searchStr1 = "G" + carton + (g + 1);
+              let currentSquare = document.getElementById(searchStr1);
+              console.log(
+                "CS : G " + searchStr1 + " call: " + "G" + carton + (g + 1)
+              );
+              currentSquare.style.color = "dimgray";
+              currentSquare.style.backgroundColor = "#99d8ea";
+              break;
+            }
+          }
+        } else {
+          for (var o = 0; o < 5; o++) {
+            console.log(this.card[card].O[o]);
+            if (this.card[card].O[o] == squareNum) {
+              let searchStr1 = "O" + carton + (o + 1);
+              let currentSquare = document.getElementById(searchStr1);
+              console.log(
+                "CS : O " + searchStr1 + " call: " + "O" + carton + (o + 1)
+              );
+              currentSquare.style.color = "dimgray";
+              currentSquare.style.backgroundColor = "#99d8ea";
+              break;
+            }
+          }
+        }
+      }
+    },
 
     generateNewNum() {
       // generates a random numbers between 1 and 15
@@ -212,6 +356,7 @@ export default {
     },
 
     markSquare(square) {
+      console.log("marcando click " + square);
       var currentSquare = document.getElementById(square);
       if (currentSquare.style.backgroundColor == "lightblue")
         currentSquare.style.backgroundColor = "#ffffff";
@@ -225,16 +370,23 @@ export default {
       if (this.calledNumbers.includes(rand)) this.callNumber();
       else {
         this.calledNumbers.push(rand);
-        if (rand >= 1 && rand <= 15)
-          document.getElementById("currentCall").innerHTML = "B" + rand;
-        else if (rand >= 16 && rand <= 30)
-          document.getElementById("currentCall").innerHTML = "I" + rand;
-        else if (rand >= 31 && rand <= 45)
-          document.getElementById("currentCall").innerHTML = "N" + rand;
-        else if (rand >= 46 && rand <= 60)
-          document.getElementById("currentCall").innerHTML = "G" + rand;
-        else document.getElementById("currentCall").innerHTML = "O" + rand;
-        document.getElementById("calledNums").innerHTML = this.calledNumbers;
+        if (rand >= 1 && rand <= 15) {
+          this.currentCall = "B_" + rand;
+          this.calledNumbersLetters.push(this.currentCall);
+        } else if (rand >= 16 && rand <= 30) {
+          this.currentCall = "I_" + rand;
+          this.calledNumbersLetters.push(this.currentCall);
+        } else if (rand >= 31 && rand <= 45) {
+          this.currentCall = "N_" + rand;
+          this.calledNumbersLetters.push(this.currentCall);
+        } else if (rand >= 46 && rand <= 60) {
+          this.currentCall = "G_" + rand;
+          this.calledNumbersLetters.push(this.currentCall);
+        } else {
+          this.currentCall = "O_" + rand;
+          this.calledNumbersLetters.push(this.currentCall);
+        }
+        this.colorSquare(rand, this.player.settings.cards);
       }
     },
 
