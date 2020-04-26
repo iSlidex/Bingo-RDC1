@@ -249,11 +249,11 @@ export default {
         if (squareNum >= 1 && squareNum <= 15) {
           for (var k = 0; k < 5; k++) {
             console.log(this.card[card].B[k]);
-            if (this.card[card].B[k] == squareNum) {
-              let searchStr1 = "B" + carton + (k + 1);
+            if (this.card[i].B[k] == squareNum) {
+              let searchStr1 = "B" + (i + 1) + (k + 1);
               let currentSquare = document.getElementById(searchStr1);
               console.log(
-                "CS : B " + searchStr1 + " call: " + "B" + carton + (k + 1)
+                "CS : B " + searchStr1 + " call: " + "B" + (i + 1) + (k + 1)
               );
               currentSquare.style.color = "dimgray";
               currentSquare.style.backgroundColor = "#99d8ea";
@@ -263,11 +263,11 @@ export default {
         } else if (squareNum >= 16 && squareNum <= 30) {
           for (var l = 0; l < 5; l++) {
             console.log(this.card[card].I[l]);
-            if (this.card[card].I[l] == squareNum) {
-              let searchStr1 = "I" + carton + (l + 1);
+            if (this.card[i].I[l] == squareNum) {
+              let searchStr1 = "I" + (i + 1) + (l + 1);
               let currentSquare = document.getElementById(searchStr1);
               console.log(
-                "CS : I " + searchStr1 + " call: " + "I" + carton + (l + 1)
+                "CS : I " + searchStr1 + " call: " + "I" + (i + 1) + (l + 1)
               );
               currentSquare.style.color = "dimgray";
               currentSquare.style.backgroundColor = "#99d8ea";
@@ -277,11 +277,11 @@ export default {
         } else if (squareNum >= 31 && squareNum <= 45) {
           for (var n = 0; n < 5; n++) {
             console.log(this.card[card].N[n]);
-            if (this.card[card].N[n] == squareNum) {
-              let searchStr1 = "N" + carton + (n + 1);
+            if (this.card[i].N[n] == squareNum) {
+              let searchStr1 = "N" + (i + 1) + (n + 1);
               let currentSquare = document.getElementById(searchStr1);
               console.log(
-                "CS : N " + searchStr1 + " call: " + "N" + carton + (n + 1)
+                "CS : N " + searchStr1 + " call: " + "N" + (i + 1) + (n + 1)
               );
               currentSquare.style.color = "dimgray";
               currentSquare.style.backgroundColor = "#99d8ea";
@@ -291,11 +291,11 @@ export default {
         } else if (squareNum >= 46 && squareNum <= 60) {
           for (var g = 0; g < 5; g++) {
             console.log(this.card[card].G[g]);
-            if (this.card[card].G[g] == squareNum) {
-              let searchStr1 = "G" + carton + (g + 1);
+            if (this.card[i].G[g] == squareNum) {
+              let searchStr1 = "G" + (i + 1) + (g + 1);
               let currentSquare = document.getElementById(searchStr1);
               console.log(
-                "CS : G " + searchStr1 + " call: " + "G" + carton + (g + 1)
+                "CS : G " + searchStr1 + " call: " + "G" + (i + 1) + (g + 1)
               );
               currentSquare.style.color = "dimgray";
               currentSquare.style.backgroundColor = "#99d8ea";
@@ -305,11 +305,11 @@ export default {
         } else {
           for (var o = 0; o < 5; o++) {
             console.log(this.card[card].O[o]);
-            if (this.card[card].O[o] == squareNum) {
-              let searchStr1 = "O" + carton + (o + 1);
+            if (this.card[i].O[o] == squareNum) {
+              let searchStr1 = "O" + (i + 1) + (o + 1);
               let currentSquare = document.getElementById(searchStr1);
               console.log(
-                "CS : O " + searchStr1 + " call: " + "O" + carton + (o + 1)
+                "CS : O " + searchStr1 + " call: " + "O" + (i + 1) + (o + 1)
               );
               currentSquare.style.color = "dimgray";
               currentSquare.style.backgroundColor = "#99d8ea";
