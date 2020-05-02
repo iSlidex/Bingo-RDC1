@@ -11,8 +11,10 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@serialport/list": "^8.0.7",
         "express": "^4.17.1",
         "nodemon": "^2.0.3",
+        "serialport": "^8.0.7",
         "socket.io": "^2.3.0"
     }
 }

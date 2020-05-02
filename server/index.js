@@ -2,6 +2,12 @@ const express = require("express");
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
+const SerialPort = require("serialport");
+
+SerialPort.list().then(
+    (ports) => ports.forEach(console.log),
+    (err) => console.error(err)
+);
 
 const port = 3000;
 
