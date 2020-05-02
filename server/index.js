@@ -1,21 +1,19 @@
-const http = require("http");
+const express = require("express");
+const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
 
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
+app.use(express.static("public"));
 
-    res.end("Hola Mundo\n");
+app.get("/", function (req, res) {
+    res.send("Hello World!");
 });
 
-const io = require("socket.io")(server);
 io.on("connection", (socket) => {
-    console.log("a user connected");
-    socket.emit("success");
+    console.log("A user connected");
+    io.emit("success");
 
     socket.on("emit_nombre", (data) => {
         console.log("Nombre set ", data);
@@ -27,6 +25,11 @@ io.on("connection", (socket) => {
     });
 });
 
+/*
+app.listen(app, function () {
+    console.log("App listening on port 3000!");
+});*/
+
 server.listen(port, () => {
-    console.log(`Server running at ${port}`);
+    console.log("App listening on port 3000!");
 });
