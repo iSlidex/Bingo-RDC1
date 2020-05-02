@@ -55,11 +55,6 @@ export default {
         disconnect() {
             this.is_connect = false;
         },
-
-        success() {
-            console.log("socket connected");
-            this.is_connect = true;
-        },
     },
     computed: {
         currentViewComponent: function() {
@@ -69,7 +64,7 @@ export default {
     methods: {
         updateName(name) {
             this.player.name = name;
-            this.$socket.emit("emit_nombre", name);
+            this.$socket.client.emit("emit_nombre", name); //Prueba de emitir nombre a server
         },
         updateView(view) {
             this.currentView = view;
