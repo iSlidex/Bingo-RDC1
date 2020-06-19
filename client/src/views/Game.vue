@@ -49,11 +49,19 @@ export default {
         connect: function() {
             // Fired when the socket connects.
             this.is_connect = true;
-            console.log("socket connected");
+            console.log("socket connected ");
         },
 
         disconnect() {
             this.is_connect = false;
+        },
+        youTurn() {
+            //turno de sacar numero
+            //AQUI HAY QUE LLAMAR A SACAR NUMERO
+        },
+        numNew(num) {
+            //NUMERO RECIBIDO
+            console.log(num);
         },
     },
     computed: {
@@ -62,6 +70,15 @@ export default {
         },
     },
     methods: {
+        enviarTurnoListo() {
+            this.$socket.client.emit("emit_nt");
+        },
+        enviarBingoPropio() {
+            this.$socket.client.emit("emit_bingo");
+        },
+        enviarNumero(num) {
+            this.$socket.client.emit("emit_numero", num);
+        },
         updateName(name) {
             this.player.name = name;
             this.$socket.client.emit("emit_nombre", name); //Prueba de emitir nombre a server
