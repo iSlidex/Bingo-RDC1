@@ -63,6 +63,10 @@ export default {
             //NUMERO RECIBIDO
             console.log(num);
         },
+        bingoEnd() {
+            //Gano alguien
+            //Mostrar mensaje - FIN
+        },
     },
     computed: {
         currentViewComponent: function() {

@@ -44,15 +44,19 @@ io.on("connection", (socket) => {
             io.emit("youTurn");
         } else if (data.includes(numberBingo) && waitingState) {
             waitingState = false;
-
             //PASAMOS TURNO
             comElegido.write(nextTurn);
         } else if (data == bingoSomeone && waitingState) {
             waitingState = false;
+
+            /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
         } else if (data.includes(numberBingo)) {
-        /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
             numCarton = data.substr(1, 2);
             io.emit("numNew", numCarton);
+        } else if (data == bingoSomeone) {
+            //Gano alguien
+            io.emit("bingoEnd", numCarton);
+            comElegido.write(bingoSomeone);
         }
     });
 
