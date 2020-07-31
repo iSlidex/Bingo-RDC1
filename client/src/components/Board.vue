@@ -306,84 +306,99 @@ export default {
         }
       }
     },
-    
-    checks(carton){
-      if(this.player.settings.mode == "linea"){
-        let B,I,N,G,O;
-        let DP;//diagonal principal
-        let DS;//diagonal secundaria
+
+    checks(carton) {
+      if (this.player.settings.mode == "linea") {
+        let B, I, N, G, O;
+        let DP; //diagonal principal
+        let DS; //diagonal secundaria
         //checks verticales
         B = this.checkB(carton);
         I = this.checkI(carton);
         N = this.checkN(carton);
         G = this.checkI(carton);
         O = this.checkO(carton);
-        //checks 
-        D = this.checkD()
+        //checks diagonales
+        DP = this.checkDP(carton);
+        DS = this.checkDS(carton);
+        if (B || I || N || G || O || DS || DP) {
+          return;
+        }
       }
       // if(this.player.settings.mode == "completo"){
 
       // }
     },
-    checkB(carton){
-        for(let i = 0; i<5 ;i++){
-          if(this.usedNumbers.includes(this.card[carton].B[i])){
-              if(i==4){
-                return true; 
-              }
-          }else 
-          break;
-        }
+    checkLine(carton, line) {},
+    checkDP(carton) {
+      return (
+        this.usedNumbers.includes(this.card[carton].B[0]) &&
+        this.usedNumbers.includes(this.card[carton].I[1]) &&
+        this.usedNumbers.includes(this.card[carton].G[3]) &&
+        this.usedNumbers.includes(this.card[carton].O[4])
+      );
     },
-    checkI(carton){
-        for(let k = 0; k<5 ;k++){
-          if(this.usedNumbers.includes(this.card[carton].I[k])){
-              if(k==4){
-                return true; 
-              }
-          }else 
-          break;
-        }      
+    checkDS(carton) {
+      return (
+        this.usedNumbers.includes(this.card[carton].O[0]) &&
+        this.usedNumbers.includes(this.card[carton].G[1]) &&
+        this.usedNumbers.includes(this.card[carton].I[3]) &&
+        this.usedNumbers.includes(this.card[carton].B[4])
+      );
     },
-    checkN(carton){
-        for(let l = 0; l<5 ;l++){
-          if(this.usedNumbers.includes(this.card[carton].N[l])){
-              if(l==2)
-                continue; // salta la casilla LIBRE
-              if(l==4){
-                return true; 
-              }
-          }else 
-          break;
-        }
+    checkB(carton) {
+      for (let i = 0; i < 5; i++) {
+        if (this.usedNumbers.includes(this.card[carton].B[i])) {
+          if (i == 4) {
+            return true;
+          }
+        } else break;
+      }
     },
-    checkG(carton){
-        for(let o = 0; o<5 ;o++){
-          if(this.usedNumbers.includes(this.card[carton].G[o])){
-              if(o==4){
-                return true; 
-              }
-          }else 
-          break;
-        }
+    checkI(carton) {
+      for (let k = 0; k < 5; k++) {
+        if (this.usedNumbers.includes(this.card[carton].I[k])) {
+          if (k == 4) {
+            return true;
+          }
+        } else break;
+      }
     },
-    checkO(carton){
-        for(let p = 0; p<5 ;p++){
-          if(this.usedNumbers.includes(this.card[carton].O[p])){
-              if(p==4){
-                return true; 
-              }
-          }else 
-          break;
-        }
+    checkN(carton) {
+      for (let l = 0; l < 5; l++) {
+        if (this.usedNumbers.includes(this.card[carton].N[l])) {
+          if (l == 2) continue; // salta la casilla LIBRE
+          if (l == 4) {
+            return true;
+          }
+        } else break;
+      }
+    },
+    checkG(carton) {
+      for (let o = 0; o < 5; o++) {
+        if (this.usedNumbers.includes(this.card[carton].G[o])) {
+          if (o == 4) {
+            return true;
+          }
+        } else break;
+      }
+    },
+    checkO(carton) {
+      for (let p = 0; p < 5; p++) {
+        if (this.usedNumbers.includes(this.card[carton].O[p])) {
+          if (p == 4) {
+            return true;
+          }
+        } else break;
+      }
     },
 
-    checkVertical(element){
-      for (let i = 0; i<5; i++){
-        if(this.calledNumbers(element[i]) ){
-          if(i==4){
+    checkVertical(element) {
+      for (let i = 0; i < 5; i++) {
+        if (this.calledNumbers(element[i])) {
+          if (i == 4) {
             return true;
-          }else{
+          } else {
             continue;
           }
         }
@@ -404,19 +419,19 @@ export default {
       let currentSquare4;
       let card = carton + 1;
       for (var k = 0; k < 5; k++) {
-        searchStr0 ="B" + card + "" + (k + 1);
+        searchStr0 = "B" + card + "" + (k + 1);
         console.log(searchStr0);
         currentSquare0 = document.getElementById(searchStr0);
-        searchStr1 ="I" + card + "" + (k + 1);
+        searchStr1 = "I" + card + "" + (k + 1);
         console.log(searchStr1);
         currentSquare1 = document.getElementById(searchStr1);
-        searchStr2 ="N" + card + "" + (k + 1);
+        searchStr2 = "N" + card + "" + (k + 1);
         console.log(searchStr2);
         currentSquare2 = document.getElementById(searchStr2);
-        searchStr3 ="G" + card + "" + (k + 1);
+        searchStr3 = "G" + card + "" + (k + 1);
         console.log(searchStr3);
         currentSquare3 = document.getElementById(searchStr3);
-        searchStr4 ="O" + card + "" + (k + 1);
+        searchStr4 = "O" + card + "" + (k + 1);
         console.log(searchStr4);
         currentSquare4 = document.getElementById(searchStr4);
         currentSquare0.style.color = "black";
