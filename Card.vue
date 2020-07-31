@@ -8,7 +8,7 @@
             <th class="header">I</th>
             <th class="header">N</th>
             <th class="header">G</th>
-            <th class="header">O</th>
+            <th class="header">Oasdsd</th>
           </tr>
         </thead>
         <tbody>

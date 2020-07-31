@@ -35,42 +35,32 @@
                               style="background-color:white"
                               :id="'B' + carton + item"
                               @click="markSquare('B' + carton + item)"
-                            >
-                              {{ card[carton - 1].B[item - 1] }}
-                            </td>
+                            >{{ card[carton - 1].B[item - 1] }}</td>
                             <td
                               style="background-color:white"
                               :id="'I' + carton + item"
                               @click="markSquare('I' + carton + item)"
-                            >
-                              {{ card[carton - 1].I[item - 1] }}
-                            </td>
+                            >{{ card[carton - 1].I[item - 1] }}</td>
                             <td
                               style="background-color:white"
                               :id="'N' + carton + item"
                               @click="markSquare('N' + carton + item)"
-                            >
-                              {{ card[carton - 1].N[item - 1] }}
-                            </td>
+                            >{{ card[carton - 1].N[item - 1] }}</td>
                             <td
                               style="background-color:white"
                               :id="'G' + carton + item"
                               @click="markSquare('G' + carton + item)"
-                            >
-                              {{ card[carton - 1].G[item - 1] }}
-                            </td>
+                            >{{ card[carton - 1].G[item - 1] }}</td>
                             <td
                               style="background-color:white"
                               :id="'O' + carton + item"
                               @click="markSquare('O' + carton + item)"
-                            >
-                              {{ card[carton - 1].O[item - 1] }}
-                            </td>
+                            >{{ card[carton - 1].O[item - 1] }}</td>
                           </tr>
                         </tbody>
                       </template>
                     </v-simple-table>
-                    <v-form v-on:submit.prevent="enviar"> </v-form>
+                    <v-form v-on:submit.prevent="enviar"></v-form>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer />
@@ -78,8 +68,7 @@
                       @click="generateAnotherCard(carton - 1)"
                       color="primary"
                       :disabled="resetDisabled[carton - 1]"
-                      >Reset</v-btn
-                    >
+                    >Reset</v-btn>
                     <v-btn color="primary">Jugar</v-btn>
                   </v-card-actions>
                 </v-container>
@@ -88,19 +77,20 @@
           </v-row>
           <v-row>
             <v-col>
-              <v-btn @click="callNumber()" color="primary" block
-                >SACAR NÚMERO</v-btn
-              >
+              <v-btn @click="callNumber()" color="primary" block>SACAR NÚMERO</v-btn>
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="3"> Ultimo Numero: {{ currentCall }} </v-col>
+            <v-col cols="3">Ultimo Numero: {{ currentCall }}</v-col>
           </v-row>
           <v-row>
             <v-col cols="8">
-              Numeros sacados[{{ calledNumbers.length }}]:
-              <span v-for="num in calledNumbersLetters" :key="num.id"
-                >{{ num }}
+              Numeros sacados [ {{ calledNumbers.length }} ]:
+              <span
+                v-for="num in calledNumbersLetters"
+                :key="num.id"
+              >
+                {{ num }}
                 <span
                   v-if="
                     calledNumbersLetters.length > 1 &&
@@ -110,12 +100,10 @@
                         1 !=
                         calledNumbersLetters.length
                   "
-                >
-                  -
-                </span>
+                >-</span>
               </span>
               <div>
-                <span> </span>
+                <span></span>
               </div>
             </v-col>
           </v-row>
@@ -152,6 +140,7 @@ export default {
         1: false
       },
       currentCall: "",
+      win: false,
       boleta: [25]
     };
   },
@@ -243,80 +232,203 @@ export default {
     colorSquare(squareNum, carton) {
       console.log("squareNum " + squareNum);
       console.log("carton " + carton);
-      for (var i = 0; i < carton; i++) {
-        let card = carton - 1;
-        console.log("squareNum " + squareNum);
-        if (squareNum >= 1 && squareNum <= 15) {
-          for (var k = 0; k < 5; k++) {
-            console.log(this.card[card].B[k]);
-            if (this.card[i].B[k] == squareNum) {
-              let searchStr1 = "B" + (i + 1) + (k + 1);
-              let currentSquare = document.getElementById(searchStr1);
-              console.log(
-                "CS : B " + searchStr1 + " call: " + "B" + (i + 1) + (k + 1)
-              );
-              currentSquare.style.color = "dimgray";
-              currentSquare.style.backgroundColor = "#99d8ea";
-              break;
-            }
-          }
-        } else if (squareNum >= 16 && squareNum <= 30) {
-          for (var l = 0; l < 5; l++) {
-            console.log(this.card[card].I[l]);
-            if (this.card[i].I[l] == squareNum) {
-              let searchStr1 = "I" + (i + 1) + (l + 1);
-              let currentSquare = document.getElementById(searchStr1);
-              console.log(
-                "CS : I " + searchStr1 + " call: " + "I" + (i + 1) + (l + 1)
-              );
-              currentSquare.style.color = "dimgray";
-              currentSquare.style.backgroundColor = "#99d8ea";
-              break;
-            }
-          }
-        } else if (squareNum >= 31 && squareNum <= 45) {
-          for (var n = 0; n < 5; n++) {
-            console.log(this.card[card].N[n]);
-            if (this.card[i].N[n] == squareNum) {
-              let searchStr1 = "N" + (i + 1) + (n + 1);
-              let currentSquare = document.getElementById(searchStr1);
-              console.log(
-                "CS : N " + searchStr1 + " call: " + "N" + (i + 1) + (n + 1)
-              );
-              currentSquare.style.color = "dimgray";
-              currentSquare.style.backgroundColor = "#99d8ea";
-              break;
-            }
-          }
-        } else if (squareNum >= 46 && squareNum <= 60) {
-          for (var g = 0; g < 5; g++) {
-            console.log(this.card[card].G[g]);
-            if (this.card[i].G[g] == squareNum) {
-              let searchStr1 = "G" + (i + 1) + (g + 1);
-              let currentSquare = document.getElementById(searchStr1);
-              console.log(
-                "CS : G " + searchStr1 + " call: " + "G" + (i + 1) + (g + 1)
-              );
-              currentSquare.style.color = "dimgray";
-              currentSquare.style.backgroundColor = "#99d8ea";
-              break;
-            }
-          }
-        } else {
-          for (var o = 0; o < 5; o++) {
-            console.log(this.card[card].O[o]);
-            if (this.card[i].O[o] == squareNum) {
-              let searchStr1 = "O" + (i + 1) + (o + 1);
-              let currentSquare = document.getElementById(searchStr1);
-              console.log(
-                "CS : O " + searchStr1 + " call: " + "O" + (i + 1) + (o + 1)
-              );
-              currentSquare.style.color = "dimgray";
-              currentSquare.style.backgroundColor = "#99d8ea";
-              break;
-            }
+      let card = carton - 1;
+      console.log("squareNum " + squareNum);
+      if (squareNum >= 1 && squareNum <= 15) {
+        for (var k = 0; k < 5; k++) {
+          console.log(this.card[card].B[k]);
+          if (this.card[card].B[k] == squareNum) {
+            let searchStr1 = "B" + carton + (k + 1);
+            let currentSquare = document.getElementById(searchStr1);
+            console.log(
+              "CS : B " + searchStr1 + " call: " + "B" + carton + (k + 1)
+            );
+            currentSquare.style.color = "dimgray";
+            currentSquare.style.backgroundColor = "#99d8ea";
+            break;
           }
         }
+      } else if (squareNum >= 16 && squareNum <= 30) {
+        for (var l = 0; l < 5; l++) {
+          console.log(this.card[card].I[l]);
+          if (this.card[card].I[l] == squareNum) {
+            let searchStr1 = "I" + carton + (l + 1);
+            let currentSquare = document.getElementById(searchStr1);
+            console.log(
+              "CS : I " + searchStr1 + " call: " + "I" + carton + (l + 1)
+            );
+            currentSquare.style.color = "dimgray";
+            currentSquare.style.backgroundColor = "#99d8ea";
+            break;
+          }
+        }
+      } else if (squareNum >= 31 && squareNum <= 45) {
+        for (var n = 0; n < 5; n++) {
+          console.log(this.card[card].N[n]);
+          if (this.card[card].N[n] == squareNum) {
+            let searchStr1 = "N" + carton + (n + 1);
+            let currentSquare = document.getElementById(searchStr1);
+            console.log(
+              "CS : N " + searchStr1 + " call: " + "N" + carton + (n + 1)
+            );
+            currentSquare.style.color = "dimgray";
+            currentSquare.style.backgroundColor = "#99d8ea";
+            break;
+          }
+        }
+      } else if (squareNum >= 46 && squareNum <= 60) {
+        for (var g = 0; g < 5; g++) {
+          console.log(this.card[card].G[g]);
+          if (this.card[card].G[g] == squareNum) {
+            let searchStr1 = "G" + carton + (g + 1);
+            let currentSquare = document.getElementById(searchStr1);
+            console.log(
+              "CS : G " + searchStr1 + " call: " + "G" + carton + (g + 1)
+            );
+            currentSquare.style.color = "dimgray";
+            currentSquare.style.backgroundColor = "#99d8ea";
+            break;
+          }
+        }
+      } else {
+        for (var o = 0; o < 5; o++) {
+          console.log(this.card[card].O[o]);
+          if (this.card[card].O[o] == squareNum) {
+            let searchStr1 = "O" + carton + (o + 1);
+            let currentSquare = document.getElementById(searchStr1);
+            console.log(
+              "CS : O " + searchStr1 + " call: " + "O" + carton + (o + 1)
+            );
+            currentSquare.style.color = "dimgray";
+            currentSquare.style.backgroundColor = "#99d8ea";
+            break;
+          }
+        }
+      }
+    },
+    
+    checks(carton){
+      if(this.player.settings.mode == "linea"){
+        let B,I,N,G,O;
+        let DP;//diagonal principal
+        let DS;//diagonal secundaria
+        //checks verticales
+        B = this.checkB(carton);
+        I = this.checkI(carton);
+        N = this.checkN(carton);
+        G = this.checkI(carton);
+        O = this.checkO(carton);
+        //checks 
+        D = this.checkD()
+      }
+      // if(this.player.settings.mode == "completo"){
+
+      // }
+    },
+    checkB(carton){
+        for(let i = 0; i<5 ;i++){
+          if(this.usedNumbers.includes(this.card[carton].B[i])){
+              if(i==4){
+                return true; 
+              }
+          }else 
+          break;
+        }
+    },
+    checkI(carton){
+        for(let k = 0; k<5 ;k++){
+          if(this.usedNumbers.includes(this.card[carton].I[k])){
+              if(k==4){
+                return true; 
+              }
+          }else 
+          break;
+        }      
+    },
+    checkN(carton){
+        for(let l = 0; l<5 ;l++){
+          if(this.usedNumbers.includes(this.card[carton].N[l])){
+              if(l==2)
+                continue; // salta la casilla LIBRE
+              if(l==4){
+                return true; 
+              }
+          }else 
+          break;
+        }
+    },
+    checkG(carton){
+        for(let o = 0; o<5 ;o++){
+          if(this.usedNumbers.includes(this.card[carton].G[o])){
+              if(o==4){
+                return true; 
+              }
+          }else 
+          break;
+        }
+    },
+    checkO(carton){
+        for(let p = 0; p<5 ;p++){
+          if(this.usedNumbers.includes(this.card[carton].O[p])){
+              if(p==4){
+                return true; 
+              }
+          }else 
+          break;
+        }
+    },
+
+    checkVertical(element){
+      for (let i = 0; i<5; i++){
+        if(this.calledNumbers(element[i]) ){
+          if(i==4){
+            return true;
+          }else{
+            continue;
+          }
+        }
+      }
+      return false;
+    },
+
+    unColorSquare(carton) {
+      let searchStr0 = "";
+      let searchStr1 = "";
+      let searchStr2 = "";
+      let searchStr3 = "";
+      let searchStr4 = "";
+      let currentSquare0;
+      let currentSquare1;
+      let currentSquare2;
+      let currentSquare3;
+      let currentSquare4;
+      let card = carton + 1;
+      for (var k = 0; k < 5; k++) {
+        searchStr0 ="B" + card + "" + (k + 1);
+        console.log(searchStr0);
+        currentSquare0 = document.getElementById(searchStr0);
+        searchStr1 ="I" + card + "" + (k + 1);
+        console.log(searchStr1);
+        currentSquare1 = document.getElementById(searchStr1);
+        searchStr2 ="N" + card + "" + (k + 1);
+        console.log(searchStr2);
+        currentSquare2 = document.getElementById(searchStr2);
+        searchStr3 ="G" + card + "" + (k + 1);
+        console.log(searchStr3);
+        currentSquare3 = document.getElementById(searchStr3);
+        searchStr4 ="O" + card + "" + (k + 1);
+        console.log(searchStr4);
+        currentSquare4 = document.getElementById(searchStr4);
+        currentSquare0.style.color = "black";
+        currentSquare0.style.backgroundColor = "#ffffff";
+        currentSquare1.style.color = "black";
+        currentSquare1.style.backgroundColor = "#ffffff";
+        currentSquare2.style.color = "black";
+        currentSquare2.style.backgroundColor = "#ffffff";
+        currentSquare3.style.color = "black";
+        currentSquare3.style.backgroundColor = "#ffffff";
+        currentSquare4.style.color = "black";
+        currentSquare4.style.backgroundColor = "#ffffff";
       }
     },
 
@@ -342,6 +454,7 @@ export default {
       this.resetDisabled[carton] = true;
       this.resetUsedNumbers(carton);
       this.generateNewCard(carton);
+      this.unColorSquare(carton);
       this.resetDisabled[carton] = false;
     },
 
@@ -371,22 +484,23 @@ export default {
       else {
         this.calledNumbers.push(rand);
         if (rand >= 1 && rand <= 15) {
-          this.currentCall = "B_" + rand;
+          this.currentCall = "B" + rand;
           this.calledNumbersLetters.push(this.currentCall);
         } else if (rand >= 16 && rand <= 30) {
-          this.currentCall = "I_" + rand;
+          this.currentCall = "I" + rand;
           this.calledNumbersLetters.push(this.currentCall);
         } else if (rand >= 31 && rand <= 45) {
-          this.currentCall = "N_" + rand;
+          this.currentCall = "N" + rand;
           this.calledNumbersLetters.push(this.currentCall);
         } else if (rand >= 46 && rand <= 60) {
-          this.currentCall = "G_" + rand;
+          this.currentCall = "G" + rand;
           this.calledNumbersLetters.push(this.currentCall);
         } else {
-          this.currentCall = "O_" + rand;
+          this.currentCall = "O" + rand;
           this.calledNumbersLetters.push(this.currentCall);
         }
-        this.colorSquare(rand, this.player.settings.cards);
+        for (var i = 1; i <= this.player.settings.cards; i++)
+          this.colorSquare(rand, i);
       }
     },
 
