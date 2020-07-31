@@ -6,34 +6,72 @@ const io = require("socket.io")(server);
 const SerialPort = require("serialport");
 const Delimiter = require("@serialport/parser-delimiter");
 
-const port = process.env.npm_config_port || 3000;
+//const port = process.env.npm_config_port || 3000;
+let port = null;
+const n_equip = process.env.npm_config_equipo || 1;
 
 //CODIGOS DE MENSAJES
 const nextTurn = "NT";
 const bingoSomeone = "G";
 const numberBingo = "N";
 
-//PUERTO COM SELECCIONADO
+//PUERTO COM ESCRITURA SELECCIONADO
+let comEscritura = null;
+let comLectura = null;
+
 let comElegido = null;
 
-//server 1
-if (port == 8000) {
-    comElegido = new SerialPort("COM2", {
-        baudRate: 9600,
-    });
+switch (Number(n_equip)) {
+    case 1:
+        port = 6000;
+        comEscritura = new SerialPort("COM11", {
+            baudRate: 9600,
+        });
+        comLectura = new SerialPort("COM14", {
+            baudRate: 9600,
+        });
+        break;
+
+    case 2:
+        port = 7000;
+        comEscritura = new SerialPort("COM12", {
+            baudRate: 9600,
+        });
+        comLectura = new SerialPort("COM11", {
+            baudRate: 9600,
+        });
+        break;
+
+    case 3:
+        port = 8000;
+        comEscritura = new SerialPort("COM13", {
+            baudRate: 9600,
+        });
+        comLectura = new SerialPort("COM12", {
+            baudRate: 9600,
+        });
+        break;
+
+    case 4:
+        port = 9000;
+        comEscritura = new SerialPort("COM14", {
+            baudRate: 9600,
+        });
+        comLectura = new SerialPort("COM13", {
+            baudRate: 9600,
+        });
+        break;
+
+    default:
+        break;
 }
 
-//serve 2
-if (port == 9000) {
-    comElegido = new SerialPort("COM3", {
-        baudRate: 9600,
-    });
-}
+console.log("PC: ", n_equip, "Puerto: ", port);
 
 io.on("connection", (socket) => {
     console.log("A user connected");
 
-    comElegido.on("data", function (data) {
+    comLectura.on("data", function (data) {
         data = data.toString();
         console.log(data);
 
@@ -45,7 +83,7 @@ io.on("connection", (socket) => {
         } else if (data.includes(numberBingo) && waitingState) {
             waitingState = false;
             //PASAMOS TURNO
-            comElegido.write(nextTurn);
+            comEscritura.write(nextTurn);
         } else if (data == bingoSomeone && waitingState) {
             waitingState = false;
 
@@ -56,7 +94,7 @@ io.on("connection", (socket) => {
         } else if (data == bingoSomeone) {
             //Gano alguien
             io.emit("bingoEnd", numCarton);
-            comElegido.write(bingoSomeone);
+            comEscritura.write(bingoSomeone);
         }
     });
 
@@ -64,18 +102,18 @@ io.on("connection", (socket) => {
     socket.on("emit_num", (data) => {
         dataToSend = `${numberBingo}${data}`;
         waitingState = true;
-        comElegido.write(dataToSend);
+        comEscritura.write(dataToSend);
     });
 
     //BINGO PROPIOOO
     socket.on("emit_bingo", () => {
         waitingState = true;
-        comElegido.write(bingoSomeone);
+        comEscritura.write(bingoSomeone);
     });
 
     //TURNO LISTO
     socket.on("emit_nt", () => {
-        comElegido.write(nextTurn);
+        comEscritura.write(nextTurn);
     });
 });
 
