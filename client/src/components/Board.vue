@@ -308,10 +308,11 @@ export default {
     },
 
     checks(carton) {
+      let B, I, N, G, O;
       if (this.player.settings.mode == "linea") {
-        let B, I, N, G, O;
         let DP; //diagonal principal
         let DS; //diagonal secundaria
+        let L1,L2,L3,L4,L5; //lineas verticales
         //checks verticales
         B = this.checkB(carton);
         I = this.checkI(carton);
@@ -321,15 +322,40 @@ export default {
         //checks diagonales
         DP = this.checkDP(carton);
         DS = this.checkDS(carton);
-        if (B || I || N || G || O || DS || DP) {
-          return;
+        //checks verticales
+        L1 = this.checkLine(carton,"B");
+        L2 = this.checkLine(carton,"I");
+        L3 = this.checkLine(carton,"N");
+        L4 = this.checkLine(carton,"G");
+        L5 = this.checkLine(carton,"O");
+        if (B || I || N || G || O || DS || DP || L1 || L2 || L3 || L4 || L5) {
+          this.win = true;
         }
       }
-      // if(this.player.settings.mode == "completo"){
-
-      // }
+       if(this.player.settings.mode == "completo"){
+          B = this.checkB(carton);
+          I = this.checkI(carton);
+          N = this.checkN(carton);
+          G = this.checkI(carton);
+          O = this.checkO(carton);
+          if(B && I && N && G && O ){
+            this.win = true;
+          }
+       
+       }
     },
-    checkLine(carton, line) {},
+    checkLine(carton, line) {
+      for(let i = 0 ; i<5 ;i++){
+        if(this.usedNumbers.includes(this.card[carton].line[i])){
+          if(i==2 && line=="N")
+          continue;
+          if (i == 4) {
+            return true;
+          }
+        }else
+          break;
+      }
+    },
     checkDP(carton) {
       return (
         this.usedNumbers.includes(this.card[carton].B[0]) &&
