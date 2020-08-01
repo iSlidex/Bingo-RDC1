@@ -76,8 +76,8 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
-              <v-btn @click="callNumber()" color="primary" block>SACAR NÚMERO</v-btn>
+            <v-col class="d-flex">
+              <v-btn @click="callNumber()" class="mx-auto" color="primary">SACAR NÚMERO</v-btn>
             </v-col>
           </v-row>
           <v-row>
@@ -161,6 +161,14 @@ export default {
       return "line";
     }
   },
+  watch: {
+    //ACA EMITIR LO QUE SEA POR NODE :V
+    win: function() {
+      if (this.win) {
+        console.log("ganaste bb");
+      }
+    }
+  },
   methods: {
     enviar() {
       this.$emit("updateName", this.nombre);
@@ -230,19 +238,12 @@ export default {
       }
     },
     colorSquare(squareNum, carton) {
-      console.log("squareNum " + squareNum);
-      console.log("carton " + carton);
       let card = carton - 1;
-      console.log("squareNum " + squareNum);
       if (squareNum >= 1 && squareNum <= 15) {
         for (var k = 0; k < 5; k++) {
-          console.log(this.card[card].B[k]);
           if (this.card[card].B[k] == squareNum) {
             let searchStr1 = "B" + carton + (k + 1);
             let currentSquare = document.getElementById(searchStr1);
-            console.log(
-              "CS : B " + searchStr1 + " call: " + "B" + carton + (k + 1)
-            );
             currentSquare.style.color = "dimgray";
             currentSquare.style.backgroundColor = "#99d8ea";
             break;
@@ -250,13 +251,9 @@ export default {
         }
       } else if (squareNum >= 16 && squareNum <= 30) {
         for (var l = 0; l < 5; l++) {
-          console.log(this.card[card].I[l]);
           if (this.card[card].I[l] == squareNum) {
             let searchStr1 = "I" + carton + (l + 1);
             let currentSquare = document.getElementById(searchStr1);
-            console.log(
-              "CS : I " + searchStr1 + " call: " + "I" + carton + (l + 1)
-            );
             currentSquare.style.color = "dimgray";
             currentSquare.style.backgroundColor = "#99d8ea";
             break;
@@ -264,13 +261,9 @@ export default {
         }
       } else if (squareNum >= 31 && squareNum <= 45) {
         for (var n = 0; n < 5; n++) {
-          console.log(this.card[card].N[n]);
           if (this.card[card].N[n] == squareNum) {
             let searchStr1 = "N" + carton + (n + 1);
             let currentSquare = document.getElementById(searchStr1);
-            console.log(
-              "CS : N " + searchStr1 + " call: " + "N" + carton + (n + 1)
-            );
             currentSquare.style.color = "dimgray";
             currentSquare.style.backgroundColor = "#99d8ea";
             break;
@@ -278,13 +271,9 @@ export default {
         }
       } else if (squareNum >= 46 && squareNum <= 60) {
         for (var g = 0; g < 5; g++) {
-          console.log(this.card[card].G[g]);
           if (this.card[card].G[g] == squareNum) {
             let searchStr1 = "G" + carton + (g + 1);
             let currentSquare = document.getElementById(searchStr1);
-            console.log(
-              "CS : G " + searchStr1 + " call: " + "G" + carton + (g + 1)
-            );
             currentSquare.style.color = "dimgray";
             currentSquare.style.backgroundColor = "#99d8ea";
             break;
@@ -292,13 +281,9 @@ export default {
         }
       } else {
         for (var o = 0; o < 5; o++) {
-          console.log(this.card[card].O[o]);
           if (this.card[card].O[o] == squareNum) {
             let searchStr1 = "O" + carton + (o + 1);
             let currentSquare = document.getElementById(searchStr1);
-            console.log(
-              "CS : O " + searchStr1 + " call: " + "O" + carton + (o + 1)
-            );
             currentSquare.style.color = "dimgray";
             currentSquare.style.backgroundColor = "#99d8ea";
             break;
@@ -308,130 +293,113 @@ export default {
     },
 
     checks(carton) {
-      let B, I, N, G, O;
       if (this.player.settings.mode == "linea") {
-        let DP; //diagonal principal
-        let DS; //diagonal secundaria
-        let L1,L2,L3,L4,L5; //lineas verticales
-        //checks verticales
-        B = this.checkB(carton);
-        I = this.checkI(carton);
-        N = this.checkN(carton);
-        G = this.checkI(carton);
-        O = this.checkO(carton);
-        //checks diagonales
-        DP = this.checkDP(carton);
-        DS = this.checkDS(carton);
-        //checks verticales
-        L1 = this.checkLine(carton,"B");
-        L2 = this.checkLine(carton,"I");
-        L3 = this.checkLine(carton,"N");
-        L4 = this.checkLine(carton,"G");
-        L5 = this.checkLine(carton,"O");
-        if (B || I || N || G || O || DS || DP || L1 || L2 || L3 || L4 || L5) {
+        if (
+          this.checkB(carton) ||
+          this.checkI(carton) ||
+          this.checkN(carton) ||
+          this.checkG(carton) ||
+          this.checkO(carton) ||
+          this.checkDP(carton) ||
+          this.checkDS(carton) ||
+          this.checkLine(carton, 0) ||
+          this.checkLine(carton, 1) ||
+          this.checkLine(carton, 2) ||
+          this.checkLine(carton, 3) ||
+          this.checkLine(carton, 4)
+        ) {
           this.win = true;
         }
       }
-       if(this.player.settings.mode == "completo"){
-          B = this.checkB(carton);
-          I = this.checkI(carton);
-          N = this.checkN(carton);
-          G = this.checkI(carton);
-          O = this.checkO(carton);
-          if(B && I && N && G && O ){
-            this.win = true;
-          }
-       
-       }
+      if (this.player.settings.mode == "completo") {
+        if (
+          this.checkB(carton) &&
+          this.checkI(carton) &&
+          this.checkN(carton) &&
+          this.checkG(carton) &&
+          this.checkO(carton)
+        ) {
+          this.win = true;
+        }
+      }
     },
     checkLine(carton, line) {
-      for(let i = 0 ; i<5 ;i++){
-        if(this.usedNumbers.includes(this.card[carton].line[i])){
-          if(i==2 && line=="N")
-          continue;
-          if (i == 4) {
-            return true;
-          }
-        }else
-          break;
-      }
+      if (line == 2) {
+        return (
+          this.calledNumbers.includes(this.card[carton].B[line]) &&
+          this.calledNumbers.includes(this.card[carton].I[line]) &&
+          this.calledNumbers.includes(this.card[carton].G[line]) &&
+          this.calledNumbers.includes(this.card[carton].O[line])
+        );
+      } else
+        return (
+          this.calledNumbers.includes(this.card[carton].B[line]) &&
+          this.calledNumbers.includes(this.card[carton].I[line]) &&
+          this.calledNumbers.includes(this.card[carton].N[line]) &&
+          this.calledNumbers.includes(this.card[carton].G[line]) &&
+          this.calledNumbers.includes(this.card[carton].O[line])
+        );
     },
     checkDP(carton) {
       return (
-        this.usedNumbers.includes(this.card[carton].B[0]) &&
-        this.usedNumbers.includes(this.card[carton].I[1]) &&
-        this.usedNumbers.includes(this.card[carton].G[3]) &&
-        this.usedNumbers.includes(this.card[carton].O[4])
+        this.calledNumbers.includes(this.card[carton].B[0]) &&
+        this.calledNumbers.includes(this.card[carton].I[1]) &&
+        this.calledNumbers.includes(this.card[carton].G[3]) &&
+        this.calledNumbers.includes(this.card[carton].O[4])
       );
     },
     checkDS(carton) {
       return (
-        this.usedNumbers.includes(this.card[carton].O[0]) &&
-        this.usedNumbers.includes(this.card[carton].G[1]) &&
-        this.usedNumbers.includes(this.card[carton].I[3]) &&
-        this.usedNumbers.includes(this.card[carton].B[4])
+        this.calledNumbers.includes(this.card[carton].O[0]) &&
+        this.calledNumbers.includes(this.card[carton].G[1]) &&
+        this.calledNumbers.includes(this.card[carton].I[3]) &&
+        this.calledNumbers.includes(this.card[carton].B[4])
       );
     },
     checkB(carton) {
-      for (let i = 0; i < 5; i++) {
-        if (this.usedNumbers.includes(this.card[carton].B[i])) {
-          if (i == 4) {
-            return true;
-          }
-        } else break;
-      }
+      return (
+        this.calledNumbers.includes(this.card[carton].B[0]) &&
+        this.calledNumbers.includes(this.card[carton].B[1]) &&
+        this.calledNumbers.includes(this.card[carton].B[2]) &&
+        this.calledNumbers.includes(this.card[carton].B[3]) &&
+        this.calledNumbers.includes(this.card[carton].B[4])
+      );
     },
     checkI(carton) {
-      for (let k = 0; k < 5; k++) {
-        if (this.usedNumbers.includes(this.card[carton].I[k])) {
-          if (k == 4) {
-            return true;
-          }
-        } else break;
-      }
+      return (
+        this.calledNumbers.includes(this.card[carton].I[0]) &&
+        this.calledNumbers.includes(this.card[carton].I[1]) &&
+        this.calledNumbers.includes(this.card[carton].I[2]) &&
+        this.calledNumbers.includes(this.card[carton].I[3]) &&
+        this.calledNumbers.includes(this.card[carton].I[4])
+      );
     },
     checkN(carton) {
-      for (let l = 0; l < 5; l++) {
-        if (this.usedNumbers.includes(this.card[carton].N[l])) {
-          if (l == 2) continue; // salta la casilla LIBRE
-          if (l == 4) {
-            return true;
-          }
-        } else break;
-      }
+      return (
+        this.calledNumbers.includes(this.card[carton].B[0]) &&
+        this.calledNumbers.includes(this.card[carton].B[1]) &&
+        this.calledNumbers.includes(this.card[carton].B[3]) &&
+        this.calledNumbers.includes(this.card[carton].B[4])
+      );
     },
     checkG(carton) {
-      for (let o = 0; o < 5; o++) {
-        if (this.usedNumbers.includes(this.card[carton].G[o])) {
-          if (o == 4) {
-            return true;
-          }
-        } else break;
-      }
+      return (
+        this.calledNumbers.includes(this.card[carton].G[0]) &&
+        this.calledNumbers.includes(this.card[carton].G[1]) &&
+        this.calledNumbers.includes(this.card[carton].G[2]) &&
+        this.calledNumbers.includes(this.card[carton].G[3]) &&
+        this.calledNumbers.includes(this.card[carton].G[4])
+      );
     },
     checkO(carton) {
-      for (let p = 0; p < 5; p++) {
-        if (this.usedNumbers.includes(this.card[carton].O[p])) {
-          if (p == 4) {
-            return true;
-          }
-        } else break;
-      }
+      return (
+        this.calledNumbers.includes(this.card[carton].O[0]) &&
+        this.calledNumbers.includes(this.card[carton].O[1]) &&
+        this.calledNumbers.includes(this.card[carton].O[2]) &&
+        this.calledNumbers.includes(this.card[carton].O[3]) &&
+        this.calledNumbers.includes(this.card[carton].O[4])
+      );
     },
-
-    checkVertical(element) {
-      for (let i = 0; i < 5; i++) {
-        if (this.calledNumbers(element[i])) {
-          if (i == 4) {
-            return true;
-          } else {
-            continue;
-          }
-        }
-      }
-      return false;
-    },
-
     unColorSquare(carton) {
       let searchStr0 = "";
       let searchStr1 = "";
@@ -446,19 +414,14 @@ export default {
       let card = carton + 1;
       for (var k = 0; k < 5; k++) {
         searchStr0 = "B" + card + "" + (k + 1);
-        console.log(searchStr0);
         currentSquare0 = document.getElementById(searchStr0);
         searchStr1 = "I" + card + "" + (k + 1);
-        console.log(searchStr1);
         currentSquare1 = document.getElementById(searchStr1);
         searchStr2 = "N" + card + "" + (k + 1);
-        console.log(searchStr2);
         currentSquare2 = document.getElementById(searchStr2);
         searchStr3 = "G" + card + "" + (k + 1);
-        console.log(searchStr3);
         currentSquare3 = document.getElementById(searchStr3);
         searchStr4 = "O" + card + "" + (k + 1);
-        console.log(searchStr4);
         currentSquare4 = document.getElementById(searchStr4);
         currentSquare0.style.color = "black";
         currentSquare0.style.backgroundColor = "#ffffff";
@@ -510,7 +473,6 @@ export default {
     },
 
     markSquare(square) {
-      console.log("marcando click " + square);
       var currentSquare = document.getElementById(square);
       if (currentSquare.style.backgroundColor == "lightblue")
         currentSquare.style.backgroundColor = "#ffffff";
@@ -540,267 +502,16 @@ export default {
           this.currentCall = "O" + rand;
           this.calledNumbersLetters.push(this.currentCall);
         }
-        for (var i = 1; i <= this.player.settings.cards; i++)
+        for (var i = 1; i <= this.player.settings.cards; i++) {
           this.colorSquare(rand, i);
-      }
-    },
-
-    lineBingo() {
-      this.goal = "line";
-      document.getElementById("bLine").style.backgroundColor = "#4286f4";
-      document.getElementById("bLine").disabled = true;
-      document.getElementById("bFull").disabled = true;
-      document.getElementById("bFull").style.backgroundColor = "#grey";
-    },
-
-    fullBingo() {
-      this.goal = "full";
-      document.getElementById("bFull").style.backgroundColor = "#4286f4";
-      document.getElementById("bFull").disabled = true;
-      document.getElementById("bLine").disabled = true;
-      document.getElementById("bLine").style.backgroundColor = "#grey";
-    },
-
-    checkForBingo() {
-      if (this.goal == "line") {
-        this.checkVerticalBingo();
-        this.checkHorizontalBingo();
-        this.checkDiagonalBingo();
-        this.checkCornersBingo();
-      } else {
-        this.checkFullBingo();
-      }
-    },
-
-    checkVerticalBingo() {
-      for (var i = 0; i < 5; i++) {
-        var sq1 = document.getElementById("sq" + i);
-        var sq2 = document.getElementById("sq" + (i + 5));
-        var sq3 = document.getElementById("sq" + (i + 10));
-        var sq4 = document.getElementById("sq" + (i + 15));
-        var sq5 = document.getElementById("sq" + (i + 20));
-
-        this.checkLines(sq1, sq2, sq3, sq4, sq5);
-      }
-    },
-
-    checkHorizontalBingo() {
-      var sq1, sq2, sq3, sq4, sq5;
-      for (var i = 0; i < 5; i++) {
-        switch (i) {
-          case 0:
-            sq1 = document.getElementById("sq" + i);
-            sq2 = document.getElementById("sq" + (i + 1));
-            sq3 = document.getElementById("sq" + (i + 2));
-            sq4 = document.getElementById("sq" + (i + 3));
-            sq5 = document.getElementById("sq" + (i + 4));
-            break;
-          case 1:
-            sq1 = document.getElementById("sq" + (i + 4));
-            sq2 = document.getElementById("sq" + (i + 5));
-            sq3 = document.getElementById("sq" + (i + 6));
-            sq4 = document.getElementById("sq" + (i + 7));
-            sq5 = document.getElementById("sq" + (i + 8));
-            break;
-          case 2:
-            sq1 = document.getElementById("sq" + (i + 8));
-            sq2 = document.getElementById("sq" + (i + 9));
-            sq3 = document.getElementById("sq" + (i + 10));
-            sq4 = document.getElementById("sq" + (i + 11));
-            sq5 = document.getElementById("sq" + (i + 12));
-            break;
-          case 3:
-            sq1 = document.getElementById("sq" + (i + 12));
-            sq2 = document.getElementById("sq" + (i + 13));
-            sq3 = document.getElementById("sq" + (i + 14));
-            sq4 = document.getElementById("sq" + (i + 15));
-            sq5 = document.getElementById("sq" + (i + 16));
-            break;
-          case 4:
-            sq1 = document.getElementById("sq" + (i + 16));
-            sq2 = document.getElementById("sq" + (i + 17));
-            sq3 = document.getElementById("sq" + (i + 18));
-            sq4 = document.getElementById("sq" + (i + 19));
-            sq5 = document.getElementById("sq" + (i + 20));
-            break;
-        }
-        this.checkLines(sq1, sq2, sq3, sq4, sq5);
-      }
-    },
-
-    checkDiagonalBingo() {
-      var sq1, sq2, sq3, sq4, sq5;
-      for (var i = 0; i < 2; i++) {
-        switch (i) {
-          case 0:
-            sq1 = document.getElementById("sq" + 0);
-            sq2 = document.getElementById("sq" + 6);
-            sq3 = document.getElementById("sq" + 12);
-            sq4 = document.getElementById("sq" + 18);
-            sq5 = document.getElementById("sq" + 24);
-            break;
-          case 1:
-            sq1 = document.getElementById("sq" + 4);
-            sq2 = document.getElementById("sq" + 8);
-            sq3 = document.getElementById("sq" + 12);
-            sq4 = document.getElementById("sq" + 16);
-            sq5 = document.getElementById("sq" + 20);
-            break;
-        }
-        this.checkLines(sq1, sq2, sq3, sq4, sq5);
-      }
-    },
-
-    checkCornersBingo() {
-      var sq1 = document.getElementById("sq" + 0);
-      var sq2 = document.getElementById("sq" + 4);
-      var sq3 = document.getElementById("sq" + 20);
-      var sq4 = document.getElementById("sq" + 24);
-
-      if (
-        sq1.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq1.value)) &&
-        sq2.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq2.value)) &&
-        sq3.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq3.value)) &&
-        sq4.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq4.value))
-      ) {
-        this.youWinCorners(sq1, sq2, sq3, sq4);
-        return;
-      } else {
-        document.getElementById("currentCall").innerHTML =
-          "Not a valid bingo! Keep trying!";
-        return;
-      }
-    },
-
-    checkFullBingo() {
-      var j = 0;
-      var flag = false;
-      for (var i = 0; i < 5; i++) {
-        var sq1 = document.getElementById("sq" + j);
-        j++;
-        var sq2 = document.getElementById("sq" + j);
-        j++;
-        var sq3 = document.getElementById("sq" + j);
-        j++;
-        var sq4 = document.getElementById("sq" + j);
-        j++;
-        var sq5 = document.getElementById("sq" + j);
-        j++;
-
-        if (
-          sq1.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq1.value)) &&
-          sq2.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq2.value)) &&
-          sq3.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq3.value)) &&
-          sq4.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq4.value)) &&
-          sq5.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq5.value))
-        ) {
-          flag = true;
-        } else if (
-          sq1.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq1.value)) &&
-          sq2.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq2.value)) &&
-          sq3.value == "FREE" &&
-          sq4.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq4.value)) &&
-          sq5.style.backgroundColor == "lightblue" &&
-          this.calledNumbers.includes(parseInt(sq5.value))
-        ) {
-          flag = true;
-        } else {
-          flag = false;
-          break;
+          this.checks(i - 1);
         }
       }
-      if (flag == true) {
-        this.youWinFullBingo();
-      } else {
-        document.getElementById("currentCall").innerHTML =
-          "Not a valid bingo! Keep trying!";
-        return;
-      }
-    },
-    checkLines(sq1, sq2, sq3, sq4, sq5) {
-      if (
-        sq1.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq1.value)) &&
-        sq2.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq2.value)) &&
-        sq3.value == "FREE" &&
-        sq4.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq4.value)) &&
-        sq5.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq5.value))
-      ) {
-        this.youWin(sq1, sq2, sq3, sq4, sq5);
-        return;
-      } else if (
-        sq1.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq1.value)) &&
-        sq2.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq2.value)) &&
-        sq3.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq3.value)) &&
-        sq4.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq4.value)) &&
-        sq5.style.backgroundColor == "lightblue" &&
-        this.calledNumbers.includes(parseInt(sq5.value))
-      ) {
-        this.youWin(sq1, sq2, sq3, sq4, sq5);
-        return;
-      } else {
-        document.getElementById("currentCall").innerHTML =
-          "Not a valid bingo! Keep trying!";
-        return;
-      }
-    },
-
-    youWin(sq1, sq2, sq3, sq4, sq5) {
-      sq1.style.backgroundColor = "yellow";
-      sq2.style.backgroundColor = "yellow";
-      sq3.style.backgroundColor = "yellow";
-      sq4.style.backgroundColor = "yellow";
-      sq5.style.backgroundColor = "yellow";
-      document.getElementById("bCall").disabled = true;
-      document.getElementById("bBingo").disabled = true;
-      document.getElementById("currentCall").innerHTML = "BINGO!";
-      alert("BINGO! You win!");
-      throw new Error("Not an error! Just finishes any execution of the game!");
-    },
-
-    youWinCorners(sq1, sq2, sq3, sq4) {
-      sq1.style.backgroundColor = "yellow";
-      sq2.style.backgroundColor = "yellow";
-      sq3.style.backgroundColor = "yellow";
-      sq4.style.backgroundColor = "yellow";
-      document.getElementById("bCall").disabled = true;
-      document.getElementById("bBingo").disabled = true;
-      document.getElementById("currentCall").innerHTML = "BINGO!";
-      alert("BINGO! You win!");
-      throw new Error("Not an error! Just finishes any execution of the game!");
-    },
-
-    youWinFullBingo() {
-      document.getElementById("bCall").disabled = true;
-      document.getElementById("bBingo").disabled = true;
-      document.getElementById("currentCall").innerHTML = "BINGO!";
-      alert("BINGO! You win!");
-      throw new Error("Not an error! Just finishes any execution of the game!");
     }
   },
   created() {
     for (var k = 0; k < parseInt(this.player.settings.cards); k++)
       this.generateNewCard(k);
-    console.log(this.player.settings.cards);
   }
 };
 </script>
@@ -831,6 +542,7 @@ td {
 .header {
   background: rgb(25, 118, 210);
   font-size: 20px;
+  color: #fff !important;
 }
 
 #sq12 {

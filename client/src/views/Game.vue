@@ -9,10 +9,11 @@
                 :player="player"
             ></component>
         </keep-alive>
-        <p>Name : {{ player.name }}</p>
+        <p>Nombre del jugador : {{ player.name }}</p>
         <p>
-            Einstellungen : Modus: {{ player.settings.mode }} Karten:
-            {{ player.settings.cards }}
+            Configuraciones : <br>
+            Modo de juego: {{ player.settings.mode }} <br>
+            Cartones: {{ player.settings.cards }}
         </p>
         <p>Esta conectado a server: {{ is_connect }}</p>
     </div>
