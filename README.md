@@ -10,14 +10,23 @@ PROYECTO DE REDES DE COMPUTADORES I DE LA UNIVERSIDAD CATÓLICA ANDRÉS BELLO
 -   NPM o YARN
 -   VUE CLI
 
-## DISTRIBUCIÓN DE PUERTOS
+## CONFIGURACIÓN DE PUERTOS EN VSPE EN PARES
+
+| COM A | COM B |
+| :---: | :---: |
+|  11   |  12   |
+|  13   |  14   |
+|  15   |  16   |
+|  17   |  18   |
+
+## DISTRIBUCIÓN DE PUERTOS EN NODEJS
 
 | PC  | COM LECTURA | COM ESCRITURA | PUERTO |
 | --- | :---------: | :-----------: | :----: |
-| 1   |     14      |      11       |  6000  |
-| 2   |     11      |      12       |  7000  |
-| 3   |     12      |      13       |  8000  |
-| 4   |     13      |      14       |  9000  |
+| 1   |     18      |      11       |  6000  |
+| 2   |     12      |      13       |  7000  |
+| 3   |     14      |      15       |  8000  |
+| 4   |     16      |      17       |  9000  |
 
 ## INSTALACIÓN
 

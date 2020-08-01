@@ -27,23 +27,13 @@ switch (Number(n_equip)) {
         comEscritura = new SerialPort("COM11", {
             baudRate: 9600,
         });
-        comLectura = new SerialPort("COM14", {
+        comLectura = new SerialPort("COM18", {
             baudRate: 9600,
         });
         break;
 
     case 2:
         port = 7000;
-        comEscritura = new SerialPort("COM12", {
-            baudRate: 9600,
-        });
-        comLectura = new SerialPort("COM11", {
-            baudRate: 9600,
-        });
-        break;
-
-    case 3:
-        port = 8000;
         comEscritura = new SerialPort("COM13", {
             baudRate: 9600,
         });
@@ -52,12 +42,22 @@ switch (Number(n_equip)) {
         });
         break;
 
-    case 4:
-        port = 9000;
-        comEscritura = new SerialPort("COM14", {
+    case 3:
+        port = 8000;
+        comEscritura = new SerialPort("COM15", {
             baudRate: 9600,
         });
-        comLectura = new SerialPort("COM13", {
+        comLectura = new SerialPort("COM14", {
+            baudRate: 9600,
+        });
+        break;
+
+    case 4:
+        port = 9000;
+        comEscritura = new SerialPort("COM17", {
+            baudRate: 9600,
+        });
+        comLectura = new SerialPort("COM16", {
             baudRate: 9600,
         });
         break;
