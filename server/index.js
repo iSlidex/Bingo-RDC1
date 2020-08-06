@@ -82,8 +82,7 @@ io.on("connection", (socket) => {
     console.log("A user connected");
 
     comLectura.on("data", function (data) {
-        data = data.toString();
-        console.log(data);
+        //console.log(data);
 
         let { modo, flag, num } = leer(data);
 
@@ -118,7 +117,6 @@ io.on("connection", (socket) => {
                 /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
             } else if (modo === NUMBER_BINGO) {
                 //Recibimos numero
-                //numCarton = data.substr(1, 2);
                 io.emit("numNew", num);
             } else if (modo === BINGO_SOMEONE) {
                 //Gano alguien
@@ -136,12 +134,12 @@ io.on("connection", (socket) => {
             io.emit("youTurn");
         } else {
             //Sin juego configurado
-            // data: {numero: 1, flag: 'Lineal'}
+            // data: {num: 'N33', flag: 'Lineal'}
             //CAMBIAR DATA
             numPlayer = num++;
 
             //Emitir a Vue Modo de juego
-            io.emit("confModo", flag? modoCompleto : modoLineal);
+            io.emit("confModo", flag ? modoCompleto : modoLineal);
 
             //Cambio estado
             playingState = true;
@@ -161,9 +159,6 @@ io.on("connection", (socket) => {
 
     //SACAMOS NUMERO
     socket.on("emit_num", (num, flagBP) => {
-        //dataToSend = `${NUMBER_BINGO}${data}`;
-        //comEscritura.write(dataToSend);
-
         //Enviamos numero con flag de bingo propio
         comEscritura.write(enviar(num, flagBP)); //Letra y Num y si con eso canta bingo
 
@@ -354,10 +349,10 @@ io.on("connection", (socket) => {
         //SI NO HAY MODO ENVIAR LETRA Y NUMERO
         if (modo === NUMBER_BINGO) {
             payload = _escribirLetraYNumero(numero); //Escribe la letra y numero
-            payload = _escribirFlag(flag,payload); //Indica si canta bingo
+            payload = _escribirFlag(flag, payload); //Indica si canta bingo
         } else if (modo === BEGIN_GAME) {
             payload = _escribirFlag(flag); //Se indica si es lineal o completo
-            payload = _escribirModo(BEGIN_GAME,payload); //Se indica que se inicia el juego
+            payload = _escribirModo(BEGIN_GAME, payload); //Se indica que se inicia el juego
             payload |= numero % 4; //Se indica el numero de jugador
         } else if (modo === BINGO_SOMEONE) {
             payload = _escribirModo(BINGO_SOMEONE);
@@ -370,44 +365,54 @@ io.on("connection", (socket) => {
 
     /**
      * Obtener el modo, flag y num
-     * 
+     *
      * @param {Buffer} data
-     * @returns {Object} {modo, flag, num} 
+     * @returns {Object} {modo, flag, num}
      */
     const leer = (data) => {
         let payload = _obtenerPayload(data);
-        
+
         if (!payload) return null;
 
-        let res = {modo: 0, flag: 0, num: 0};
-        
-        switch(_obtenerModo(payload)){
-            case 0: res.modo = NUMBER_BINGO;
-                    res.num ="B" +  _obtenerNumero(payload); 
-                    break;
-            case 1: res.modo = NUMBER_BINGO;
-                    res.num ="I" + (_obtenerNumero(payload) + 15); 
-                    break;
-            case 2: res.modo = NUMBER_BINGO;
-                    res.num ="N" + (_obtenerNumero(payload) + 30);
-                    break;
-            case 3: res.modo = NUMBER_BINGO;
-                    res.num ="G" + (_obtenerNumero(payload) + 45);
-                    break;
-            case 4: res.modo = NUMBER_BINGO;
-                    res.num ="O" + (_obtenerNumero(payload) + 60); 
-                    break;
-            case 5: res.modo = BEGIN_GAME;
-                    res.num = _obtenerNumero(payload);
-                    break;
-            case 6: res.modo = NEXT_TURN; break;
-            case 7: res.modo = BINGO_SOMEONE; break;
+        let res = { modo: 0, flag: 0, num: 0 };
+
+        switch (_obtenerModo(payload)) {
+            case 0:
+                res.modo = NUMBER_BINGO;
+                res.num = "B" + _obtenerNumero(payload);
+                break;
+            case 1:
+                res.modo = NUMBER_BINGO;
+                res.num = "I" + (_obtenerNumero(payload) + 15);
+                break;
+            case 2:
+                res.modo = NUMBER_BINGO;
+                res.num = "N" + (_obtenerNumero(payload) + 30);
+                break;
+            case 3:
+                res.modo = NUMBER_BINGO;
+                res.num = "G" + (_obtenerNumero(payload) + 45);
+                break;
+            case 4:
+                res.modo = NUMBER_BINGO;
+                res.num = "O" + (_obtenerNumero(payload) + 60);
+                break;
+            case 5:
+                res.modo = BEGIN_GAME;
+                res.num = _obtenerNumero(payload);
+                break;
+            case 6:
+                res.modo = NEXT_TURN;
+                break;
+            case 7:
+                res.modo = BINGO_SOMEONE;
+                break;
         }
 
         res.flag = _obtenerFlag(payload);
 
         return res;
-    }
+    };
 });
 
 app.use(express.static("public"));
