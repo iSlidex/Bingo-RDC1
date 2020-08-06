@@ -21,7 +21,7 @@ const modoCompleto = "Completo";
 //ESTADOS
 let waitingState = false;
 let playingState = false;
-let mineTurnState = false;
+let myTurnState = false;
 
 let numPlayer = 1;
 
@@ -92,7 +92,7 @@ io.on("connection", (socket) => {
             //BLOQUE DE COMPORTAMIENTO EN MI TURNO
             if (modo == NEXT_TURN) {
                 //mi turno = sacar numero
-                mineTurnState = true;
+                myTurnState = true;
                 //console.warn("--ES MI TURNO");
                 io.emit("youTurn");
             } else if (modo === NUMBER_BINGO && waitingState) {
@@ -100,16 +100,20 @@ io.on("connection", (socket) => {
                 if (flag) {
                     //waitingState = true; ya ta' true ;)
                     //Esperar y transmitir bingo
-                    comEscritura.write(enviar()); //REVISAR QUE SE ENVIA en enviar();
+                    comEscritura.write(enviar(BINGO_SOMEONE));
                 } else {
                     //No hay => PASAMOS TURNO
                     waitingState = false;
-                    mineTurnState = false;
-                    comEscritura.write(enviar(NEXT_TURN)); //REVISAR QUE SE ENVIA en enviar();
+                    myTurnState = false;
+                    comEscritura.write(enviar(NEXT_TURN));
                 }
             } else if (modo === BINGO_SOMEONE && waitingState) {
                 //Alguien ganó => fin
+                //Se acabo
                 waitingState = false;
+                playingState = false;
+                myTurnState = false;
+                io.emit("bingoEnd");
 
                 /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
             } else if (data.includes(NUMBER_BINGO)) {
@@ -118,8 +122,13 @@ io.on("connection", (socket) => {
                 io.emit("numNew", num);
             } else if (modo === BINGO_SOMEONE) {
                 //Gano alguien
-                io.emit("bingoEnd", num);
-                comEscritura.write(BINGO_SOMEONE); //REVISAR que se manda (pasar al siguiente)
+                io.emit("bingoEnd");
+                comEscritura.write(enviar(BINGO_SOMEONE)); //(pasar al siguiente)
+
+                //Se acabo
+                waitingState = false;
+                playingState = false;
+                myTurnState = false;
             }
         } else if (waitingState && !playingState) {
             //Finalizar espera => Sacar Numero
@@ -156,7 +165,7 @@ io.on("connection", (socket) => {
         comEscritura.write(enviar(num, flagBP)); //Letra y Num y si con eso canta bingo
 
         //Activo espera si es mi turno
-        if (mineTurnState) {
+        if (myTurnState) {
             waitingState = true;
         }
     });
@@ -169,7 +178,7 @@ io.on("connection", (socket) => {
 
     //TURNO LISTO
     /* socket.on("emit_nt", () => {
-        mineTurnState = false;
+        myTurnState = false;
         comEscritura.write(enviar(NEXT_TURN));
     });*/
 
