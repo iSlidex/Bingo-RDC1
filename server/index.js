@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
         data = data.toString();
         console.log(data);
 
-        let { modo, flag, num } = data;
+        let { modo, flag, num } = leer(data);
 
         //Si estamos con juego configurado
         if (playingState) {
@@ -138,15 +138,15 @@ io.on("connection", (socket) => {
             //Sin juego configurado
             // data: {numero: 1, flag: 'Lineal'}
             //CAMBIAR DATA
-            numPlayer = data.numero++;
+            numPlayer = num++;
 
             //Emitir a Vue Modo de juego
-            io.emit("confModo", data.flag);
+            io.emit("confModo", flag? modoCompleto : modoLineal);
 
             //Cambio estado
             playingState = true;
 
-            comEscritura.write(enviar(BEGIN_GAME, numPlayer, data.flag === modoCompleto));
+            comEscritura.write(enviar(BEGIN_GAME, numPlayer, flag === modoCompleto));
         }
     });
 
@@ -367,6 +367,39 @@ io.on("connection", (socket) => {
 
         return _crearMensaje(payload);
     };
+
+    /**
+     * Obtener el modo, flag y num
+     * 
+     * @param {Buffer} data
+     * @returns {Object} {modo, flag, num} 
+     */
+    const leer = (data) => {
+        let payload = _obtenerPayload(data);
+        
+        if (!payload) return null;
+
+        let res = {modo: 0, flag: 0, num: 0};
+        
+        switch(_obtenerModo(payload)){
+            case 0: res.modo = NUMBER_BINGO; res.num ="B"; break;
+            case 1: res.modo = NUMBER_BINGO; res.num ="I"; break;
+            case 2: res.modo = NUMBER_BINGO; res.num ="N"; break;
+            case 3: res.modo = NUMBER_BINGO; res.num ="G"; break;
+            case 4: res.modo = NUMBER_BINGO; res.num ="O"; break;
+            case 5: res.modo = BEGIN_GAME; break;
+            case 6: res.modo = NEXT_TURN; break;
+            case 7: res.modo = BINGO_SOMEONE; break;
+        }
+
+        res.flag = _obtenerFlag(payload);
+
+
+        if (res.modo === NUMBER_BINGO) res.num += _obtenerNumero(payload);
+        else if (res.modo === BEGIN_GAME) res.num = _obtenerNumero(payload);
+
+        return res;
+    }
 });
 
 app.use(express.static("public"));
