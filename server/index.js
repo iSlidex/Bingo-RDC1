@@ -318,9 +318,9 @@ io.on("connection", (socket) => {
     const _escribirFlag = (flag, payload) => {
         if (payload == undefined) payload = 0;
 
-        if (flag) payload | 16;
+        if (flag) payload = payload | 16;
         // X OR 1 (bit 4) es 1
-        else payload & (255 - 16); // X AND 0 (bit 4) es 0
+        else payload = payload & (255 - 16); // X AND 0 (bit 4) es 0
 
         return payload;
     };
