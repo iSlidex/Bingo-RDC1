@@ -11,20 +11,25 @@ let port = null;
 const n_equip = process.env.npm_config_equipo || 1;
 
 //CODIGOS DE MENSAJES
-const nextTurn = "NT";
-const bingoSomeone = "G";
-const numberBingo = "N";
-const beginGame = "BG";
+const NEXT_TURN = "NT";
+const BINGO_SOMEONE = "G";
+const NUMBER_BINGO = "N";
+const BEGIN_GAME = "BG";
 const modoLineal = "Lineal";
 const modoCompleto = "Completo";
 
+//ESTADOS
 let waitingState = false;
+let playingState = false;
+let mineTurnState = false;
+
+let numPlayer = 1;
 
 //PUERTO COM ESCRITURA SELECCIONADO
 let comEscritura = null;
 let comLectura = null;
 
-let comElegido = null;
+//let comElegido = null;
 
 switch (Number(n_equip)) {
     case 1:
@@ -80,47 +85,93 @@ io.on("connection", (socket) => {
         data = data.toString();
         console.log(data);
 
-        //BLOQUE DE COMPORTAMIENTO EN MI TURNO
-        if (data == nextTurn) {
-            //mi turno = sacar numero
-            //console.warn("--ES MI TURNO");
-            io.emit("youTurn");
-        } else if (data.includes(numberBingo) && waitingState) {
-            waitingState = false;
-            //PASAMOS TURNO
-            comEscritura.write(nextTurn);
-        } else if (data == bingoSomeone && waitingState) {
-            waitingState = false;
+        let { modo, flag, num } = data;
 
-            /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
-        } else if (data.includes(numberBingo)) {
-            numCarton = data.substr(1, 2);
-            io.emit("numNew", numCarton);
-        } else if (data == bingoSomeone) {
-            //Gano alguien
-            io.emit("bingoEnd", numCarton);
-            comEscritura.write(bingoSomeone);
+        //Si estamos con juego configurado
+        if (playingState) {
+            //BLOQUE DE COMPORTAMIENTO EN MI TURNO
+            if (modo == NEXT_TURN) {
+                //mi turno = sacar numero
+                mineTurnState = true;
+                //console.warn("--ES MI TURNO");
+                io.emit("youTurn");
+            } else if (modo === NUMBER_BINGO && waitingState) {
+                //Hay bingo?
+                if (flag) {
+                    //waitingState = true; ya ta' true ;)
+                    //Esperar y transmitir bingo
+                    comEscritura.write(enviar()); //REVISAR QUE SE ENVIA en enviar();
+                } else {
+                    //No hay => PASAMOS TURNO
+                    waitingState = false;
+                    mineTurnState = false;
+                    comEscritura.write(enviar(NEXT_TURN)); //REVISAR QUE SE ENVIA en enviar();
+                }
+            } else if (modo === BINGO_SOMEONE && waitingState) {
+                //Alguien ganó => fin
+                waitingState = false;
+
+                /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
+            } else if (data.includes(NUMBER_BINGO)) {
+                //Recibimos numero
+                //numCarton = data.substr(1, 2);
+                io.emit("numNew", num);
+            } else if (modo === BINGO_SOMEONE) {
+                //Gano alguien
+                io.emit("bingoEnd", num);
+                comEscritura.write(BINGO_SOMEONE); //REVISAR que se manda (pasar al siguiente)
+            }
+        } else if (waitingState && !playingState) {
+            //Finalizar espera => Sacar Numero
+            waitingState = false;
+            io.emit("youTurn");
+        } else {
+            //Sin juego configurado
+            // data: {numero: 1, flag: 'Lineal'}
+            numPlayer = data.numero++;
+
+            //Emitir a Vue Modo de juego
+            io.emit("confModo", data.flag);
+
+            //Cambio estado
+            playingState = true;
         }
     });
 
-    //SACAMOS NUMERO
-    socket.on("emit_num", (data) => {
-        dataToSend = `${numberBingo}${data}`;
+    //YO INICIO PARTIDA / CONFIGURO
+    socket.on("emit_iniciar", (data) => {
+        //TO-DO VER QUE ME MANDAN
+
+        //Completo = 1
+        comEscritura.write(enviar(BEGIN_GAME, numPlayer, data === modoCompleto));
         waitingState = true;
-        comElegido.write(dataToSend);
-        //comElegido.write(enviar("O65",true)); //Letra y Num y si con eso canta bingo
+    });
+
+    //SACAMOS NUMERO
+    socket.on("emit_num", (num, flagBP) => {
+        //dataToSend = `${NUMBER_BINGO}${data}`;
+        //comEscritura.write(dataToSend);
+
+        //Enviamos numero con flag de bingo propio
+        comEscritura.write(enviar(num, flagBP)); //Letra y Num y si con eso canta bingo
+
+        //Activo espera si es mi turno
+        if (mineTurnState) {
+            waitingState = true;
+        }
     });
 
     //BINGO PROPIOOO
-    socket.on("emit_bingo", () => {
+    /*socket.on("emit_bingo", () => {
         waitingState = true;
-        comElegido.write(enviar(bingoSomeone));
-    });
+        comEscritura.write(enviar(BINGO_SOMEONE));
+    });*/
 
     //TURNO LISTO
-    socket.on("emit_nt", () => {
-        comElegido.write(enviar(nextTurn));
-    });
+    /* socket.on("emit_nt", () => {
+        mineTurnState = false;
+        comEscritura.write(enviar(NEXT_TURN));
+    });*/
 
     /*
     ESTRUCTURA PROTOCOLO 1 BYTE LLLFNNNN
@@ -165,9 +216,9 @@ io.on("connection", (socket) => {
      * 2 es N
      * 3 es G
      * 4 es O
-     * 5 es beginGame
-     * 6 es nextTurn
-     * 7 es bingoSomeone
+     * 5 es BEGIN_GAME
+     * 6 es NEXT_TURN
+     * 7 es BINGO_SOMEONE
      */
     const _obtenerModo = (payload) => payload >> 5;
 
@@ -270,9 +321,9 @@ io.on("connection", (socket) => {
     const _escribirModo = (modo, payload) => {
         if (payload === undefined) payload = 0;
 
-        if (modo === nextTurn) payload |= 6 << 5;
+        if (modo === NEXT_TURN) payload |= 6 << 5;
         //Escribe 110 en los primeros 3 bits mas significativos
-        else if (modo === bingoSomeone) payload |= 7 << 5;
+        else if (modo === BINGO_SOMEONE) payload |= 7 << 5;
         //Escribe 111
         else if (modo === iniciarPartida) payload |= 5 << 5; //Escribe 101
 
@@ -281,25 +332,25 @@ io.on("connection", (socket) => {
 
     //FUNCIONES PROTOCOLO GENERAL
     /**
-     * @param {String} modo //beginGame, numberBingo
+     * @param {String} modo //BEGIN_GAME, NUMBER_BINGO
      * @param {String} numero
-     * @param {Boolean} flag //bingoSomeone (nextTurn), (Lineal, Completo) si es begingame
+     * @param {Boolean} flag //BINGO_SOMEONE (NEXT_TURN), (Lineal (0), Completo(1)) si es BEGIN_GAME
      *
      */
     const enviar = (modo, numero, flag) => {
         let payload = 0; //MENSAJE VACIO
         //SI NO HAY MODO ENVIAR LETRA Y NUMERO
-        if (modo === numberBingo) {
+        if (modo === NUMBER_BINGO) {
             payload = _escribirLetraYNumero(numero); //Escribe la letra y numero
             payload = _escribirFlag(flag); //Indica si canta bingo
-        } else if (modo === beginGame) {
+        } else if (modo === BEGIN_GAME) {
             payload = _escribirFlag(flag); //Se indica si es lineal o completo
-            payload = _escribirModo(beginGame); //Se indica que se inicia el juego
+            payload = _escribirModo(BEGIN_GAME); //Se indica que se inicia el juego
             payload |= numero % 4; //Se indica el numero de jugador
-        } else if (modo === bingoSomeone) {
-            payload = _escribirModo(bingoSomeone);
-        } else if (modo === nextTurn) {
-            payload = _escribirModo(nextTurn);
+        } else if (modo === BINGO_SOMEONE) {
+            payload = _escribirModo(BINGO_SOMEONE);
+        } else if (modo === NEXT_TURN) {
+            payload = _escribirModo(NEXT_TURN);
         }
 
         return _crearMensaje(payload);

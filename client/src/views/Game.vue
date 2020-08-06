@@ -11,8 +11,8 @@
         </keep-alive>
         <p>Nombre del jugador : {{ player.name }}</p>
         <p>
-            Configuraciones : <br>
-            Modo de juego: {{ player.settings.mode }} <br>
+            Configuraciones : <br />
+            Modo de juego: {{ player.settings.mode }} <br />
             Cartones: {{ player.settings.cards }}
         </p>
         <p>Esta conectado a server: {{ is_connect }}</p>
@@ -56,16 +56,25 @@ export default {
         disconnect() {
             this.is_connect = false;
         },
+        confModo(modo) {
+            //Recibe modo de juego
+            //Lineal , Completo
+        },
         youTurn() {
             //turno de sacar numero
-            //AQUI HAY QUE LLAMAR A SACAR NUMERO
+            //1-AQUI HAY QUE LLAMAR A SACAR NUMERO
+            //2- Transmitirlo con enviarNumero()
         },
         numNew(num) {
             //NUMERO RECIBIDO
             console.log(num);
+
+            //1-Actualizar tablero
+            //2-Comprobar bingo propio
+            //3-Llamar enviarNumero(num) para reenviar a pc de a lado
         },
         bingoEnd() {
-            //Gano alguien
+            //Recibes si Gano alguien
             //Mostrar mensaje - FIN
         },
     },
@@ -75,14 +84,17 @@ export default {
         },
     },
     methods: {
-        enviarTurnoListo() {
+        enviarIniciarJuego(modo) {
+            this.$socket.client.emit("emit_iniciar", modo);
+        },
+        /*  enviarTurnoListo() {
             this.$socket.client.emit("emit_nt");
-        },
-        enviarBingoPropio() {
+        },*/
+        /* enviarBingoPropio() {
             this.$socket.client.emit("emit_bingo");
-        },
-        enviarNumero(num) {
-            this.$socket.client.emit("emit_numero", num);
+        },*/
+        enviarNumero(num, flagBingoPropio = false) {
+            this.$socket.client.emit("emit_numero", num, flagBingoPropio);
         },
         updateName(name) {
             this.player.name = name;
