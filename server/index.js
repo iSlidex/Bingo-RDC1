@@ -116,7 +116,7 @@ io.on("connection", (socket) => {
                 io.emit("bingoEnd");
 
                 /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
-            } else if (data.includes(NUMBER_BINGO)) {
+            } else if (modo === NUMBER_BINGO) {
                 //Recibimos numero
                 //numCarton = data.substr(1, 2);
                 io.emit("numNew", num);
