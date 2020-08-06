@@ -69,7 +69,7 @@
                       color="primary"
                       :disabled="resetDisabled[carton - 1]"
                     >Reset</v-btn>
-                    <v-btn color="primary">Jugar</v-btn>
+                    <v-btn @click="checks(carton - 1)" color="primary">BINGO!</v-btn>
                   </v-card-actions>
                 </v-container>
               </v-card>
