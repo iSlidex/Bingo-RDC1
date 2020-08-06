@@ -112,12 +112,12 @@ io.on("connection", (socket) => {
     //BINGO PROPIOOO
     socket.on("emit_bingo", () => {
         waitingState = true;
-        comElegido.write(enviarBINGO());
+        comElegido.write(enviar(bingoSomeone));
     });
 
     //TURNO LISTO
     socket.on("emit_nt", () => {
-        comElegido.write(enviarNextTurn());
+        comElegido.write(enviar(nextTurn));
     });
 
     /*
@@ -282,13 +282,13 @@ io.on("connection", (socket) => {
     /**
      * 
      * @param {String} numero 
-     * @param {Boolean} flag //bingoSomeone, Lineal, Completo
-     * @param {String} modo //beginGame, nextTurn
+     * @param {Boolean} flag //bingoSomeone (nextTurn), (Lineal, Completo) si es begingame
+     * @param {String} modo //beginGame
      */
-    const enviar = (numero, flag, modo) => {
+    const enviar = (modo, numero, flag) => {
         let payload = 0; //MENSAJE VACIO
         //SI NO HAY MODO ENVIAR LETRA Y NUMERO
-        if (modo === undefined){
+        if (modo === numberBingo){
             
             payload = _escribirLetraYNumero(numero); //Escribe la letra y numero
             payload = _escribirFlag(flag); //Indica si canta bingo 
@@ -301,14 +301,16 @@ io.on("connection", (socket) => {
             payload |= numero % 4; //Se indica el numero de jugador
 
         }
+        else if (modo === bingoSomeone){
+            payload = _escribirModo(bingoSomeone);
+        }
+        else if (modo === nextTurn){
+            payload = _escribirModo(nextTurn);
+        }
 
         return _crearMensaje(payload);
     
     }
-
-    const enviarBINGO = () =>  _crearMensaje(_escribirModo(bingoSomeone));
-
-    const enviarNextTurn = () => _crearMensaje(_escribirModo(nextTurn));
 
 });
 
