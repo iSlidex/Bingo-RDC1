@@ -137,6 +137,7 @@ io.on("connection", (socket) => {
         } else {
             //Sin juego configurado
             // data: {numero: 1, flag: 'Lineal'}
+            //CAMBIAR DATA
             numPlayer = data.numero++;
 
             //Emitir a Vue Modo de juego
@@ -144,6 +145,8 @@ io.on("connection", (socket) => {
 
             //Cambio estado
             playingState = true;
+
+            comEscritura.write(enviar(BEGIN_GAME, numPlayer, data.flag === modoCompleto));
         }
     });
 
