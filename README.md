@@ -23,10 +23,10 @@ PROYECTO DE REDES DE COMPUTADORES I DE LA UNIVERSIDAD CATÓLICA ANDRÉS BELLO
 
 | PC  | COM LECTURA | COM ESCRITURA | PUERTO |
 | --- | :---------: | :-----------: | :----: |
-| 1   |     18      |      11       |  6000  |
-| 2   |     12      |      13       |  7000  |
-| 3   |     14      |      15       |  8000  |
-| 4   |     16      |      17       |  9000  |
+| 1   |     18      |      11       |  8085  |
+| 2   |     12      |      13       |  8086  |
+| 3   |     14      |      15       |  8087  |
+| 4   |     16      |      17       |  8088  |
 
 ## INSTALACIÓN
 

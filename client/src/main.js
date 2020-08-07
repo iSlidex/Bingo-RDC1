@@ -8,7 +8,7 @@ import "material-design-icons-iconfont/dist/material-design-icons.css";
 import VueSocketIOExt from "vue-socket.io-extended";
 import io from "socket.io-client";
 
-const port = process.env.VUE_APP_PORT || 3000;
+const port = process.env.VUE_APP_PORT || 8085;
 const socket = io(`http://localhost:${port}`);
 
 Vue.use(VueSocketIOExt, socket);

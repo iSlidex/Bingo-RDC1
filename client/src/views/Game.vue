@@ -52,20 +52,22 @@ export default {
             this.is_connect = true;
             console.log("socket connected ");
         },
-
         disconnect() {
             this.is_connect = false;
         },
         confModo(modo) {
             //Recibe modo de juego
             //Lineal , Completo
-            console.log(modo);
+
+            this.player.settings.mode = modo;
+            this.updateView("Board");
         },
-        youTurn() {
+        /* youTurn() {
             //turno de sacar numero
             //1-AQUI HAY QUE LLAMAR A SACAR NUMERO
             //2- Transmitirlo con enviarNumero()
-        },
+            console.log("Estoy en GAME");
+        },*/
         numNew(num) {
             //NUMERO RECIBIDO
             console.log(num);
@@ -89,12 +91,6 @@ export default {
             console.log("enviarIniciarJuego ", modo);
             this.$socket.client.emit("emit_iniciar", modo);
         },
-        /*  enviarTurnoListo() {
-            this.$socket.client.emit("emit_nt");
-        },*/
-        /* enviarBingoPropio() {
-            this.$socket.client.emit("emit_bingo");
-        },*/
         enviarNumero(num, flagBingoPropio = false) {
             this.$socket.client.emit("emit_numero", num, flagBingoPropio);
         },

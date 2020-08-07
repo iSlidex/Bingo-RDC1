@@ -7,7 +7,7 @@ const SerialPort = require("serialport");
 const Delimiter = require("@serialport/parser-delimiter");
 
 //const port = process.env.npm_config_port || 3000;
-let port = null;
+let port = 8085;
 const n_equip = process.env.npm_config_equipo || 1;
 
 //CODIGOS DE MENSAJES
@@ -33,7 +33,7 @@ let comLectura = null;
 
 switch (Number(n_equip)) {
     case 1:
-        port = 6000;
+        port = 8085;
         comEscritura = new SerialPort("COM11", {
             baudRate: 9600,
         });
@@ -43,7 +43,7 @@ switch (Number(n_equip)) {
         break;
 
     case 2:
-        port = 7000;
+        port = 8086;
         comEscritura = new SerialPort("COM13", {
             baudRate: 9600,
         });
@@ -53,7 +53,7 @@ switch (Number(n_equip)) {
         break;
 
     case 3:
-        port = 8000;
+        port = 8087;
         comEscritura = new SerialPort("COM15", {
             baudRate: 9600,
         });
@@ -63,7 +63,7 @@ switch (Number(n_equip)) {
         break;
 
     case 4:
-        port = 9000;
+        port = 8088;
         comEscritura = new SerialPort("COM17", {
             baudRate: 9600,
         });
@@ -80,7 +80,7 @@ console.log("PC: ", n_equip, "Puerto: ", port);
 
 io.on("connection", (socket) => {
     console.log("A user connected");
-
+    io.emit("youTurn");
     comLectura.on("data", function (data) {
         //console.log(data);
 
@@ -92,7 +92,7 @@ io.on("connection", (socket) => {
             if (modo == NEXT_TURN) {
                 //mi turno = sacar numero
                 myTurnState = true;
-                //console.warn("--ES MI TURNO");
+                console.warn("--ES MI TURNO");
                 io.emit("youTurn");
             } else if (modo === NUMBER_BINGO && waitingState) {
                 //Hay bingo?
@@ -159,6 +159,7 @@ io.on("connection", (socket) => {
 
     //SACAMOS NUMERO
     socket.on("emit_num", (num, flagBP) => {
+        console.log("emit_num", num, flagBP);
         //Enviamos numero con flag de bingo propio
         comEscritura.write(enviar(num, flagBP)); //Letra y Num y si con eso canta bingo
 
