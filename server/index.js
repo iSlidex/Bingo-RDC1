@@ -150,6 +150,7 @@ io.on("connection", (socket) => {
 
     //YO INICIO PARTIDA / CONFIGURO
     socket.on("emit_iniciar", (data) => {
+        console.log("emit_iniciar", data);
         //TO-DO VER QUE ME MANDAN
 
         //Completo = 1

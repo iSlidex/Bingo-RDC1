@@ -68,18 +68,18 @@ export default {
             //2- Transmitirlo con enviarNumero()
             console.log("Estoy en GAME");
         },*/
-        numNew(num) {
+        /*numNew(num) {
             //NUMERO RECIBIDO
             console.log(num);
 
             //1-Actualizar tablero
             //2-Comprobar bingo propio
             //3-Llamar enviarNumero(num) para reenviar a pc de a lado
-        },
-        bingoEnd() {
+        },*/
+        /*bingoEnd() {
             //Recibes si Gano alguien
             //Mostrar mensaje - FIN
-        },
+        },*/
     },
     computed: {
         currentViewComponent: function() {
@@ -90,9 +90,6 @@ export default {
         enviarIniciarJuego(modo) {
             console.log("enviarIniciarJuego ", modo);
             this.$socket.client.emit("emit_iniciar", modo);
-        },
-        enviarNumero(num, flagBingoPropio = false) {
-            this.$socket.client.emit("emit_numero", num, flagBingoPropio);
         },
         updateName(name) {
             this.player.name = name;

@@ -186,11 +186,27 @@ export default {
         youTurn() {
             //turno de sacar numero
             //1-AQUI HAY QUE LLAMAR A SACAR NUMERO
+            this.callNumber();
             //2- Transmitirlo con enviarNumero()
-            console.log("Estoy en BOARD");
+            this.enviarNumero(this.currentCall, this.win);
+        },
+        numNew(num) {
+            //NUMERO RECIBIDO
+            console.log(num);
+
+            //1-Actualizar tablero
+            //2-Comprobar bingo propio
+            //3-Llamar enviarNumero(num) para reenviar a pc de a lado
+        },
+        bingoEnd() {
+            //Recibes si Gano alguien
+            //Mostrar mensaje - FIN
         },
     },
     methods: {
+        enviarNumero(num, flagBingoPropio = false) {
+            this.$socket.client.emit("emit_numero", num, flagBingoPropio);
+        },
         enviar() {
             this.$emit("updateName", this.nombre);
         },
