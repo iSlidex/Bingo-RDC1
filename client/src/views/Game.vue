@@ -59,6 +59,7 @@ export default {
         confModo(modo) {
             //Recibe modo de juego
             //Lineal , Completo
+            console.log(modo);
         },
         youTurn() {
             //turno de sacar numero
@@ -85,6 +86,7 @@ export default {
     },
     methods: {
         enviarIniciarJuego(modo) {
+            console.log("enviarIniciarJuego ", modo);
             this.$socket.client.emit("emit_iniciar", modo);
         },
         /*  enviarTurnoListo() {
@@ -106,6 +108,8 @@ export default {
         updateSettings(settings) {
             this.player.settings.mode = settings.mode;
             this.player.settings.cards = settings.cards;
+
+            this.enviarIniciarJuego(settings.mode);
         },
     },
 };

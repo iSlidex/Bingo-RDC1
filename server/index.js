@@ -15,8 +15,8 @@ const NEXT_TURN = "NT";
 const BINGO_SOMEONE = "G";
 const NUMBER_BINGO = "N";
 const BEGIN_GAME = "BG";
-const modoLineal = "Lineal";
-const modoCompleto = "Completo";
+const modoLineal = "lineal";
+const modoCompleto = "completo";
 
 //ESTADOS
 let waitingState = false;
