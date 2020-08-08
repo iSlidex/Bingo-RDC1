@@ -184,7 +184,7 @@ export default {
         //ACA EMITIR LO QUE SEA POR NODE :V
         win: function() {
             if (this.win) {
-                alert("ganaste bb");
+                //alert("ganaste bb");
             }
         },
     },
@@ -195,7 +195,7 @@ export default {
             //1-AQUI HAY QUE LLAMAR A SACAR NUMERO
             this.isMyTurn = true;
         },
-        numNew(num) {
+        numNew(num, flag) {
             //NUMERO RECIBIDO
             console.warn("NUMERO RECIBIDO", num, this.isMyTurn);
 
@@ -204,7 +204,7 @@ export default {
             this.callNumber(num);
 
             //3-Llamar enviarNumero(num) para reenviar a pc de a lado
-            this.$socket.client.emit("emit_num", num, this.win);
+            this.$socket.client.emit("emit_num", num, this.win || flag);
         },
         bingoEnd() {
             //Recibes si Gano alguien

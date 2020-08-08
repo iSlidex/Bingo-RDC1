@@ -125,7 +125,7 @@ io.on("connection", (socket) => {
             } else if (modo === NUMBER_BINGO) {
                 //Recibimos numero
                 console.log("IN - Recibimos numero", num);
-                io.emit("numNew", num);
+                io.emit("numNew", num, flag);
             } else if (modo === BINGO_SOMEONE) {
                 //Gano alguien
                 console.log("IN - Gano alguien");
