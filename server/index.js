@@ -80,9 +80,10 @@ console.log("PC: ", n_equip, "Puerto: ", port);
 
 io.on("connection", (socket) => {
     console.log("A user connected");
-    io.emit("youTurn");
+    //io.emit("youTurn");
+
     comLectura.on("data", function (data) {
-        //console.log(data);
+        console.log("DATA: ", data, data.toString());
 
         let { modo, flag, num } = leer(data);
 
@@ -92,22 +93,25 @@ io.on("connection", (socket) => {
             if (modo == NEXT_TURN) {
                 //mi turno = sacar numero
                 myTurnState = true;
-                console.warn("--ES MI TURNO");
+                console.warn("IN - ES MI TURNO");
                 io.emit("youTurn");
             } else if (modo === NUMBER_BINGO && waitingState) {
                 //Hay bingo?
                 if (flag) {
                     //waitingState = true; ya ta' true ;)
                     //Esperar y transmitir bingo
+                    console.log("IN - (VUELTA DE NUM) NextT con bingo");
                     comEscritura.write(enviar(BINGO_SOMEONE));
                 } else {
                     //No hay => PASAMOS TURNO
                     waitingState = false;
                     myTurnState = false;
+                    console.log("IN - (VUELTA DE NUM) NextT");
                     comEscritura.write(enviar(NEXT_TURN));
                 }
             } else if (modo === BINGO_SOMEONE && waitingState) {
                 //Alguien ganó => fin
+                console.log("IN - Alguien ganó (VUELTA)");
                 //Se acabo
                 waitingState = false;
                 playingState = false;
@@ -117,9 +121,11 @@ io.on("connection", (socket) => {
                 /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
             } else if (modo === NUMBER_BINGO) {
                 //Recibimos numero
+                console.log("IN - Recibimos numero");
                 io.emit("numNew", num);
             } else if (modo === BINGO_SOMEONE) {
                 //Gano alguien
+                console.log("IN - Gano alguien");
                 io.emit("bingoEnd");
                 comEscritura.write(enviar(BINGO_SOMEONE)); //(pasar al siguiente)
 
@@ -131,11 +137,13 @@ io.on("connection", (socket) => {
         } else if (waitingState && !playingState) {
             //Finalizar espera => Sacar Numero
             waitingState = false;
+            console.log("IN - youTurn 1ero");
             io.emit("youTurn");
         } else {
             //Sin juego configurado
             // data: {num: 'N33', flag: 'Lineal'}
             //CAMBIAR DATA
+            console.log("IN - Juego configurado");
             numPlayer = num++;
 
             //Emitir a Vue Modo de juego
@@ -150,7 +158,8 @@ io.on("connection", (socket) => {
 
     //YO INICIO PARTIDA / CONFIGURO
     socket.on("emit_iniciar", (data) => {
-        console.log("emit_iniciar", data);
+        let a_enviar = enviar(BEGIN_GAME, numPlayer, data === modoCompleto);
+        console.log("OUT - emit_iniciar", data, a_enviar);
         //TO-DO VER QUE ME MANDAN
 
         //Completo = 1
@@ -160,7 +169,8 @@ io.on("connection", (socket) => {
 
     //SACAMOS NUMERO
     socket.on("emit_num", (num, flagBP) => {
-        console.log("emit_num", num, flagBP);
+        let a_enviar = enviar(num, flagBP);
+        console.log("OUT - emit_num", num, flagBP, a_enviar);
         //Enviamos numero con flag de bingo propio
         comEscritura.write(enviar(num, flagBP)); //Letra y Num y si con eso canta bingo
 

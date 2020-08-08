@@ -15,6 +15,7 @@
                                 <v-toolbar color="primary" dark flat>
                                     <v-toolbar-title>Das Bingo {{ carton }}</v-toolbar-title>
                                     <v-spacer />
+                                    <p v-show="isMyTurn">Mi turno</p>
                                 </v-toolbar>
                                 <v-container>
                                     <v-card-text>
@@ -155,6 +156,7 @@ export default {
             currentCall: "",
             win: false,
             boleta: [25],
+            isMyTurn: false,
         };
     },
     computed: {
@@ -185,7 +187,9 @@ export default {
     sockets: {
         youTurn() {
             //turno de sacar numero
+            console.warn("EVENT youTurn");
             //1-AQUI HAY QUE LLAMAR A SACAR NUMERO
+            this.isMyTurn = true;
             this.callNumber();
             //2- Transmitirlo con enviarNumero()
             this.enviarNumero(this.currentCall, this.win);
@@ -196,16 +200,22 @@ export default {
 
             //1-Actualizar tablero
             //2-Comprobar bingo propio
+            this.callNumber(num);
+
             //3-Llamar enviarNumero(num) para reenviar a pc de a lado
+            this.$socket.client.emit("emit_num", num, this.win);
         },
         bingoEnd() {
             //Recibes si Gano alguien
             //Mostrar mensaje - FIN
+            console.warn("EVENT bingoEnd Gano alguien");
         },
     },
     methods: {
         enviarNumero(num, flagBingoPropio = false) {
-            this.$socket.client.emit("emit_numero", num, flagBingoPropio);
+            console.warn("ENVIANDO NUMERO");
+            this.isMyTurn = false;
+            this.$socket.client.emit("emit_num", num, flagBingoPropio);
         },
         enviar() {
             this.$emit("updateName", this.nombre);
@@ -517,8 +527,16 @@ export default {
             return;
         },
 
-        callNumber() {
-            var rand = Math.floor(Math.random() * 75) + 1; // random number between 1 and 75
+        callNumber(gen_num = null) {
+            var rand;
+            if (gen_num) {
+                //Extraemos el numero del string Ej: "O75" => 75
+                console.log("Uso numero");
+                rand = Number(gen_num.substring(1));
+            } else {
+                console.log("Saco numero");
+                rand = Math.floor(Math.random() * 75) + 1; // random number between 1 and 75
+            }
             // if the number is in the array (already been called)
             if (this.calledNumbers.includes(rand)) this.callNumber();
             else {

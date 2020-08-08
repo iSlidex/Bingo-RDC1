@@ -6,6 +6,7 @@
                 @updateName="updateName"
                 @updateView="updateView"
                 @updateSettings="updateSettings"
+                @updateCards="updateCards"
                 :player="player"
             ></component>
         </keep-alive>
@@ -97,6 +98,9 @@ export default {
         },
         updateView(view) {
             this.currentView = view;
+        },
+        updateCards(settings) {
+            this.player.settings.cards = settings.cards;
         },
         updateSettings(settings) {
             this.player.settings.mode = settings.mode;

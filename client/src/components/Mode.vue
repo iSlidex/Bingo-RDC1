@@ -107,11 +107,11 @@ export default {
     },
     methods: {
         enviar() {
-            this.$emit("updateSettings", this.settings);
-
             if (this.status == "joinGame1") {
                 this.status = "joinGame2";
+                this.$emit("updateCards", this.settings);
             } else {
+                this.$emit("updateSettings", this.settings);
                 this.$emit("updateView", "Board");
             }
         },
