@@ -91,7 +91,11 @@
                     </v-row>
                     <v-row>
                         <v-col class="d-flex">
-                            <v-btn @click="callNumber()" class="mx-auto" color="primary"
+                            <v-btn
+                                @click="sacarNum()"
+                                class="mx-auto"
+                                color="primary"
+                                v-show="isMyTurn"
                                 >SACAR NÚMERO</v-btn
                             >
                         </v-col>
@@ -190,13 +194,10 @@ export default {
             console.warn("EVENT youTurn");
             //1-AQUI HAY QUE LLAMAR A SACAR NUMERO
             this.isMyTurn = true;
-            this.callNumber();
-            //2- Transmitirlo con enviarNumero()
-            this.enviarNumero(this.currentCall, this.win);
         },
         numNew(num) {
             //NUMERO RECIBIDO
-            console.log(num);
+            console.warn("NUMERO RECIBIDO", num);
 
             //1-Actualizar tablero
             //2-Comprobar bingo propio
@@ -216,6 +217,13 @@ export default {
             console.warn("ENVIANDO NUMERO");
             this.isMyTurn = false;
             this.$socket.client.emit("emit_num", num, flagBingoPropio);
+        },
+        sacarNum() {
+            this.callNumber();
+
+            //2- Transmitirlo con enviarNumero()
+            console.warn("Num a enviar", this.currentCall);
+            this.enviarNumero(this.currentCall, this.win);
         },
         enviar() {
             this.$emit("updateName", this.nombre);
@@ -531,8 +539,8 @@ export default {
             var rand;
             if (gen_num) {
                 //Extraemos el numero del string Ej: "O75" => 75
-                console.log("Uso numero");
                 rand = Number(gen_num.substring(1));
+                console.log("Uso numero", rand);
             } else {
                 console.log("Saco numero");
                 rand = Math.floor(Math.random() * 75) + 1; // random number between 1 and 75
