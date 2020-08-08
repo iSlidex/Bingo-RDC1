@@ -184,7 +184,7 @@ export default {
         //ACA EMITIR LO QUE SEA POR NODE :V
         win: function() {
             if (this.win) {
-                console.log("ganaste bb");
+                alert("ganaste bb");
             }
         },
     },
@@ -197,7 +197,7 @@ export default {
         },
         numNew(num) {
             //NUMERO RECIBIDO
-            console.warn("NUMERO RECIBIDO", num);
+            console.warn("NUMERO RECIBIDO", num, this.isMyTurn);
 
             //1-Actualizar tablero
             //2-Comprobar bingo propio
@@ -209,7 +209,7 @@ export default {
         bingoEnd() {
             //Recibes si Gano alguien
             //Mostrar mensaje - FIN
-            console.warn("EVENT bingoEnd Gano alguien");
+            alert("EVENT bingoEnd Gano alguien");
         },
     },
     methods: {

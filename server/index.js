@@ -141,6 +141,8 @@ io.on("connection", (socket) => {
         } else if (waitingState && !playingState) {
             //Finalizar espera => Sacar Numero
             waitingState = false;
+            //Cambio estado
+            playingState = true;
             console.log("IN - youTurn 1ero");
             io.emit("youTurn");
         } else {
@@ -164,13 +166,13 @@ io.on("connection", (socket) => {
     //YO INICIO PARTIDA / CONFIGURO
     socket.on("emit_iniciar", (data) => {
         let a_enviar = enviar(BEGIN_GAME, numPlayer, data === modoCompleto);
-        console.log("OUT - emit_iniciar", data, numPlayer);
+        console.log("OUT - emit_iniciar", data, numPlayer, a_enviar);
         //TO-DO VER QUE ME MANDAN
 
         //Completo = 1
         waitingState = true;
         myTurnState = true;
-        comEscritura.write(enviar(BEGIN_GAME, numPlayer, data === modoCompleto));
+        comEscritura.write(a_enviar);
     });
 
     //SACAMOS NUMERO
@@ -185,7 +187,7 @@ io.on("connection", (socket) => {
         }
 
         //Enviamos numero con flag de bingo propio
-        comEscritura.write(enviar(NUMBER_BINGO, num, flagBP)); //Letra y Num y si con eso canta bingo
+        comEscritura.write(a_enviar); //Letra y Num y si con eso canta bingo
     });
 
     /*
