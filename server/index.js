@@ -124,7 +124,7 @@ io.on("connection", (socket) => {
                 /* BLOQUE DE COMPORTAMIENTO DURANTE OTRO TURNO*/
             } else if (modo === NUMBER_BINGO) {
                 //Recibimos numero
-                console.log("IN - Recibimos numero", num);
+                console.log("IN - Recibimos numero", num, flag);
                 io.emit("numNew", num, flag);
             } else if (modo === BINGO_SOMEONE) {
                 //Gano alguien

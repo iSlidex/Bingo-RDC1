@@ -91,6 +91,7 @@
                     </v-row>
                     <v-row>
                         <v-col class="d-flex">
+                            <v-text-field label="Aquiva la entra" v-model="numerito"></v-text-field>
                             <v-btn
                                 @click="sacarNum()"
                                 class="mx-auto"
@@ -161,6 +162,7 @@ export default {
             win: false,
             boleta: [25],
             isMyTurn: false,
+            numerito: null,
         };
     },
     computed: {
@@ -222,7 +224,7 @@ export default {
             this.callNumber();
 
             //2- Transmitirlo con enviarNumero()
-            console.warn("Num a enviar", this.currentCall);
+            console.warn("Num a enviar", this.currentCall, this.win);
             this.enviarNumero(this.currentCall, this.win);
         },
         enviar() {
@@ -348,6 +350,7 @@ export default {
         },
 
         checks(carton) {
+            console.error("Verificando");
             if (this.player.settings.mode == "linea") {
                 if (
                     this.checkB(carton) ||
@@ -363,6 +366,7 @@ export default {
                     this.checkLine(carton, 3) ||
                     this.checkLine(carton, 4)
                 ) {
+                    console.error("GANE AQUI");
                     this.win = true;
                 }
             }
@@ -374,6 +378,7 @@ export default {
                     this.checkG(carton) &&
                     this.checkO(carton)
                 ) {
+                    console.error("GANE AQUI");
                     this.win = true;
                 }
             }
@@ -539,12 +544,14 @@ export default {
             var rand;
             if (gen_num) {
                 //Extraemos el numero del string Ej: "O75" => 75
-                rand = Number(gen_num.substring(1));
+                rand = Number(gen_num.substring(1)) + 1;
                 console.log("Uso numero", rand);
             } else {
                 console.log("Saco numero");
                 rand = Math.floor(Math.random() * 75) + 1; // random number between 1 and 75
             }
+            rand = Number(this.numerito) + 1;
+            //rand = prompt(`Dime un numero (R: ${rand})`);
             // if the number is in the array (already been called)
             if (this.calledNumbers.includes(rand)) this.callNumber();
             else {
