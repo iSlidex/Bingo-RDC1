@@ -58,7 +58,7 @@ export default {
         },
         confModo(modo) {
             //Recibe modo de juego
-            //Lineal , Completo
+            //Linea , Completo
 
             this.player.settings.mode = modo;
             this.updateView("Board");

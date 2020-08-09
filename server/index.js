@@ -2,28 +2,26 @@ const express = require("express");
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
-
 const SerialPort = require("serialport");
 const Delimiter = require("@serialport/parser-delimiter");
-
 //const port = process.env.npm_config_port || 3000;
 let port = 8085;
 const n_equip = process.env.npm_config_equipo || 1;
-
 //CODIGOS DE MENSAJES
 const NEXT_TURN = "NT";
 const BINGO_SOMEONE = "G";
 const NUMBER_BINGO = "N";
 const BEGIN_GAME = "BG";
-const modoLineal = "lineal";
+const modoLineal = "linea";
 const modoCompleto = "completo";
-
 //ESTADOS
+
 let waitingState = false;
 let playingState = false;
 let myTurnState = false;
 
 let numPlayer = 1;
+
 
 //PUERTO COM ESCRITURA SELECCIONADO
 let comEscritura = null;
@@ -159,7 +157,7 @@ io.on("connection", (socket) => {
             playingState = true;
 
             console.log("OUT - BEGIN_GAME");
-            comEscritura.write(enviar(BEGIN_GAME, numPlayer, flag === modoCompleto));
+            comEscritura.write(enviar(BEGIN_GAME, numPlayer, flag));
         }
     });
 
