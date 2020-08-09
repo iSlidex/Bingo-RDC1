@@ -244,7 +244,6 @@ const _obtenerFlag = (payload) => payload & MASCARA_FLAG;
  * 7 es BINGO_SOMEONE
  */
 const _obtenerModo = (payload) => payload >> 5;
-
 /**
  * Obtiene el valor ingresado en el mensaje
  * @param {Buffer} data

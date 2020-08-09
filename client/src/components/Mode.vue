@@ -74,6 +74,10 @@
                                             </template>
                                         </v-radio>
                                     </v-radio-group>
+                                    <v-switch
+                                    v-model="switch1"
+                                    :label="`Jugar automático: ${switch1.toString()}`"
+                                    ></v-switch>
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
@@ -103,14 +107,17 @@ export default {
                 cards: "1",
             },
             status: "menu",
+            switch1: false,
         };
     },
     methods: {
         enviar() {
             if (this.status == "joinGame1") {
                 this.status = "joinGame2";
+                this.$emit("updateAuto", this.switch1);
                 this.$emit("updateCards", this.settings);
             } else {
+                this.$emit("updateAuto", this.switch1);
                 this.$emit("updateSettings", this.settings);
                 this.$emit("updateView", "Board");
             }

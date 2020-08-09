@@ -7,6 +7,7 @@
                 @updateView="updateView"
                 @updateSettings="updateSettings"
                 @updateCards="updateCards"
+                @updateAuto="updateAuto"
                 :player="player"
             ></component>
         </keep-alive>
@@ -41,6 +42,7 @@ export default {
                 settings: {
                     mode: "",
                     cards: 0,
+                    auto:false,
                 },
             },
             currentView: "Intro",
@@ -101,6 +103,9 @@ export default {
         },
         updateCards(settings) {
             this.player.settings.cards = settings.cards;
+        },
+        updateAuto(auto) {
+            this.player.settings.auto = auto;
         },
         updateSettings(settings) {
             this.player.settings.mode = settings.mode;
