@@ -172,7 +172,7 @@ io.on("connection", (socket) => {
         myTurnState = true;
         comEscritura.write(a_enviar);
     });
-
+    
     //SACAMOS NUMERO
     socket.on("emit_num", (num, flagBP) => {
         let a_enviar = enviar(NUMBER_BINGO, num, flagBP);

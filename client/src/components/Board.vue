@@ -13,7 +13,7 @@
             >
               <v-card class="elevation-12">
                 <v-toolbar color="primary" dark flat>
-                  <v-toolbar-title>Das Bingo {{ carton }}</v-toolbar-title>
+                  <v-toolbar-title>Carton de bingo {{ carton }}</v-toolbar-title>
                   <v-spacer />
                   <p v-show="isMyTurn">Mi turno</p>
                 </v-toolbar>
